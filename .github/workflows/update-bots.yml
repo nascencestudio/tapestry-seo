@@ -1,0 +1,54 @@
+# Weekly: refreshes the AI crawler list from ai.robots.txt (scripts/update-bots.mjs) and opens a
+# pull request when it changed, for review before the next release (ADR 0001). Sites never fetch
+# the list themselves.
+#
+# Setup once: Settings → Actions → General → "Allow GitHub Actions to create and approve pull
+# requests". Pull requests opened with the workflow's own token don't start other workflows, so
+# CI won't run on them by itself: close and reopen the pull request to run it.
+name: Update crawler list
+
+on:
+  schedule:
+    - cron: '17 6 * * 1' # Mondays 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: update-bots
+  cancel-in-progress: false
+
+jobs:
+  update:
+    name: Refresh ai.robots.txt data
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm update-bots
+      - name: Check the new list
+        run: pnpm test && pnpm typecheck
+      - name: Open a pull request if it changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet; then echo "No changes."; exit 0; fi
+          branch="update-bots-$(date -u +%Y-%m-%d)"
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null; then echo "$branch exists."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git commit -am "Update the AI crawler list from ai.robots.txt"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "Update the AI crawler list ($(date -u +%Y-%m-%d))" \
+            --body "Automated refresh of src/data/ai-bots.ts from ai.robots.txt. Review the added, removed and re-categorized crawlers before merging (tests and typecheck passed in the workflow). Close and reopen this pull request to run CI."

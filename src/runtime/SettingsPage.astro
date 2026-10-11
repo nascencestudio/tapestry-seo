@@ -1,0 +1,494 @@
+---
+import { StudioCMSRoutes } from 'studiocms:lib';
+import { Button } from 'studiocms:ui/components/button';
+import { Icon } from 'studiocms:ui/components/icon';
+/**
+ * Plugins → Tapestry SEO in the StudioCMS dashboard (ADR 0001): which crawlers robots.txt blocks
+ * (by category, or one by one), private paths, extra rules, a preview, and the sitemap options.
+ * Served at the URL StudioCMS links plugins to (`/<dashboard>/plugins@<id>`, its missing slash
+ * included) and at `/<dashboard>/plugins/<id>`. Admins only. The form posts to this page: valid
+ * settings are saved and the page reloads; invalid extra rules come back with what was typed and
+ * the line flagged, and nothing is saved.
+ */
+/// <reference types="studiocms/v/types" />
+import { listPublicPages } from '@nascencestudio/tapestry/page';
+import PageHeader from 'studiocms/frontend/components/dashboard/PageHeader.astro';
+import SidebarLink from 'studiocms/frontend/components/dashboard/SidebarLink.astro';
+import Layout from 'studiocms/frontend/layouts/DashboardLayout.astro';
+import { BOTS, botsIn, CATEGORIES } from '../bots.js';
+import { AI_BOTS_SOURCE } from '../data/ai-bots.js';
+import { buildRobotsTxt, checkExtraRules, type RuleProblem } from '../robots.js';
+import { isBlocked, PRESETS, type SeoSettings, settingsFromForm } from '../settings.js';
+import { loadSeoSettings, saveSeoSettings } from './settings-store.js';
+import { robotsContext, siteOrigin } from './site.js';
+import { getSeoViewer } from './viewer.js';
+
+export const prerender = false;
+
+const MAX_BODY = 64 * 1024;
+const dashboardIndex = StudioCMSRoutes.mainLinks.dashboardIndex.replace(/\/$/, '');
+// The routes match "/dashboard" and any other first segment; only the real dashboard path is this page.
+if (!Astro.url.pathname.startsWith(`${dashboardIndex}/plugins`)) {
+	return new Response(null, { status: 404 });
+}
+const viewer = await getSeoViewer(Astro);
+if (!viewer.isLoggedIn) return Astro.redirect(StudioCMSRoutes.authLinks.loginURL);
+if (!viewer.isAdmin) return Astro.redirect(dashboardIndex);
+Astro.response.headers.set('Cache-Control', 'private, no-store');
+
+const here = Astro.url.pathname;
+let settings: SeoSettings = await loadSeoSettings();
+let problems: RuleProblem[] = [];
+let failed = false;
+
+if (Astro.request.method === 'POST') {
+	if (Astro.request.headers.get('origin') !== Astro.url.origin) {
+		return new Response('Cross-origin request refused', { status: 403 });
+	}
+	const body = await Astro.request.text();
+	if (body.length > MAX_BODY) return new Response('Too large', { status: 413 });
+	const submitted = settingsFromForm(new URLSearchParams(body));
+	problems = checkExtraRules(submitted.robots.extraRules);
+	if (problems.length === 0) {
+		try {
+			await saveSeoSettings(submitted);
+			return Astro.redirect(`${here}?saved=1`, 303);
+		} catch (error) {
+			console.error('[tapestry-seo] saving settings failed', error);
+			failed = true;
+		}
+	}
+	settings = submitted; // show what was typed, with the problems
+	Astro.response.status = 400;
+}
+
+const saved = Astro.url.searchParams.has('saved') && Astro.request.method !== 'POST';
+const context = robotsContext(Astro);
+const preview = buildRobotsTxt(
+	problems.length > 0 ? { ...settings, robots: { ...settings.robots, extraRules: '' } } : settings,
+	context,
+);
+const blockedCount = BOTS.filter((bot) => isBlocked(bot, settings)).length;
+const pages = await listPublicPages().catch(() => []);
+const pageTypes = [...new Set([...pages.map((p) => p.package), ...settings.sitemap.excludedTypes])].sort();
+const TYPE_LABEL: Record<string, string> = {
+	'tapestry/canvas': 'Tapestry pages',
+	'studiocms/markdown': 'Markdown pages',
+};
+const RESPECTS = {
+	yes: { label: 'Follows robots.txt', class: 'yes' },
+	no: { label: 'Ignores robots.txt', class: 'no' },
+	unknown: { label: 'Unknown', class: 'unknown' },
+} as const;
+const listDate = AI_BOTS_SOURCE.date
+	? new Date(AI_BOTS_SOURCE.date).toLocaleDateString('en', { dateStyle: 'medium' })
+	: null;
+const origin = siteOrigin(Astro);
+const { siteConfig, defaultLang: lang, security } = Astro.locals.StudioCMS;
+---
+
+<Layout
+	title="Tapestry SEO"
+	description="robots.txt and sitemap settings"
+	sidebar="double"
+	{lang}
+	config={siteConfig}
+	currentUser={security?.userSessionData ?? null}
+>
+	<div slot="double-sidebar" class="seo-inner-sidebar" data-seo-settings-nav>
+		<div class="seo-inner-sidebar__header">
+			{/* StudioCMS's double-sidebar script expects #back-to-outer and #show-page (mobile navigation). */}
+			<Button variant="solid" color="primary" size="md" id="back-to-outer" class="mobile-btn mid-size-btn">
+				<Icon name="heroicons:arrow-left" width={24} height={24} slot="start-content" />
+			</Button>
+			<p class="seo-inner-sidebar__title">Tapestry SEO</p>
+			<Button variant="solid" color="primary" size="md" id="show-page" class="mobile-btn">
+				<Icon name="heroicons:x-mark" width={24} height={24} slot="start-content" />
+			</Button>
+		</div>
+		<div class="seo-inner-sidebar__links">
+			<SidebarLink icon="heroicons:shield-check" href={`${here}#crawlers`}>Crawlers (robots.txt)</SidebarLink>
+			<SidebarLink icon="heroicons:map" href={`${here}#sitemap`}>Sitemap</SidebarLink>
+		</div>
+	</div>
+
+	<div slot="header">
+		<PageHeader title="Tapestry SEO" />
+	</div>
+
+	<div class="seo-settings" data-seo-settings>
+		{saved && (
+			<p class="seo-notice" role="status" data-seo-saved>Saved. robots.txt and the sitemap use these settings now.</p>
+		)}
+		{problems.length > 0 && (
+			<div class="seo-notice seo-notice--error" role="alert" data-seo-error>
+				<p>Nothing was saved: some extra rules aren't valid robots.txt.</p>
+				<ul>
+					{problems.map((p) => <li>{p.line > 0 ? `Line ${p.line}: ` : ''}{p.message}</li>)}
+				</ul>
+			</div>
+		)}
+		{failed && <p class="seo-notice seo-notice--error" role="alert">Saving failed. Please try again.</p>}
+
+		<form method="post" action={here} data-seo-form>
+			<section class="seo-group" id="crawlers" aria-labelledby="seo-crawlers-title">
+				<h2 class="seo-group__title" id="seo-crawlers-title">Crawlers (robots.txt)</h2>
+				<p class="seo-help">
+					robots.txt asks crawlers to stay away. Well-behaved crawlers follow it; others ignore it, so it reduces
+					traffic but isn't a security barrier. {blockedCount === 0 ? 'Nothing is blocked now.' : `${blockedCount} crawlers are blocked now.`}
+				</p>
+				<div class="seo-presets" data-seo-presets>
+					<span class="seo-presets__label">Quick choices (saves at once):</span>
+					{PRESETS.map((preset) => (
+						<button type="submit" class="seo-button" name="preset" value={preset.id} data-seo-preset={preset.id}>
+							{preset.label}
+						</button>
+					))}
+				</div>
+
+				{CATEGORIES.map((category) => {
+					const bots = botsIn(category.id);
+					const mode = settings.robots.categories[category.id];
+					return (
+						<fieldset class="seo-category" data-seo-category={category.id}>
+							<legend>{category.label} <span class="seo-count">({bots.length})</span></legend>
+							<p class="seo-help">{category.description}</p>
+							<div class="seo-modes">
+								{(
+									[
+										['allow', 'Allow'],
+										['block', 'Block all'],
+										['custom', 'Choose one by one'],
+									] as const
+								).map(([value, label]) => (
+									<label class="seo-check">
+										<input
+											type="radio"
+											name={`category.${category.id}`}
+											value={value}
+											checked={mode === value}
+											data-seo-mode={value}
+										/>
+										{label}
+									</label>
+								))}
+							</div>
+							<details class="seo-bots" open={mode === 'custom'}>
+								<summary>
+									{mode === 'custom' ? 'Tick the crawlers to block' : 'Show the crawlers'}
+								</summary>
+								<ul>
+									{bots.map((bot) => (
+										<li>
+											<label class="seo-check" title={bot.description}>
+												<input
+													type="checkbox"
+													name="bot"
+													value={bot.name}
+													checked={mode === 'custom' ? settings.robots.blocked.includes(bot.name) : mode === 'block'}
+													disabled={mode !== 'custom'}
+													data-seo-bot={bot.name}
+												/>
+												<span class="seo-bot__name">{bot.name}</span>
+												<span class="seo-bot__operator" title={bot.operator}>{bot.operator}</span>
+												<span class={`seo-badge seo-badge--${RESPECTS[bot.respects].class}`}>{RESPECTS[bot.respects].label}</span>
+											</label>
+										</li>
+									))}
+								</ul>
+							</details>
+						</fieldset>
+					);
+				})}
+
+				<label class="seo-check">
+					<input type="checkbox" name="protectPrivate" checked={settings.robots.protectPrivate} data-seo-private />
+					Keep all crawlers out of the dashboard and the plugins' APIs ({context.privatePaths.join(', ')})
+				</label>
+
+				<label class="seo-field">
+					<span>Extra rules</span>
+					<textarea
+						name="extraRules"
+						rows="5"
+						spellcheck={false}
+						placeholder={'# For example:\nUser-agent: *\nDisallow: /private/'}
+						aria-invalid={problems.length > 0 ? 'true' : undefined}
+						data-seo-extra>{settings.robots.extraRules}</textarea>
+					<span class="seo-help">Added to the end as written. Allowed: User-agent, Allow, Disallow, Crawl-delay, Sitemap and other standard rules, and # comments.</span>
+				</label>
+
+				<details class="seo-preview" data-seo-preview>
+					<summary>Preview robots.txt</summary>
+					<pre>{preview}</pre>
+					<p class="seo-help"><a href="/robots.txt" target="_blank" rel="noopener">Open /robots.txt</a> (the saved version, cached for up to 5 minutes)</p>
+				</details>
+				<p class="seo-help seo-source">
+					AI crawler list: <a href={AI_BOTS_SOURCE.repository} target="_blank" rel="noopener">ai.robots.txt</a>{listDate ? `, updated ${listDate}` : ''} (MIT). Updated with plugin releases.
+				</p>
+			</section>
+
+			<section class="seo-group" id="sitemap" aria-labelledby="seo-sitemap-title">
+				<h2 class="seo-group__title" id="seo-sitemap-title">Sitemap</h2>
+				<p class="seo-help">
+					Lists every published page for search engines, with translations linked. Drafts and unpublished Tapestry
+					pages are never included. {pages.length} page{pages.length === 1 ? '' : 's'} published now.
+				</p>
+				<label class="seo-check">
+					<input type="checkbox" name="sitemap" checked={settings.sitemap.enabled} data-seo-sitemap />
+					Publish a sitemap
+				</label>
+				{pageTypes.length > 0 && (
+					<fieldset class="seo-category">
+						<legend>Leave out</legend>
+						{pageTypes.map((type) => (
+							<label class="seo-check">
+								<input
+									type="checkbox"
+									name="sitemapExclude"
+									value={type}
+									checked={settings.sitemap.excludedTypes.includes(type)}
+									data-seo-exclude={type}
+								/>
+								{TYPE_LABEL[type] ?? type}
+							</label>
+						))}
+					</fieldset>
+				)}
+				<p class="seo-help">
+					<a href="/sitemap-index.xml" target="_blank" rel="noopener">Open the sitemap</a> ({new URL('/sitemap-index.xml', origin).href})
+				</p>
+			</section>
+
+			<button type="submit" class="seo-button seo-button--primary" data-seo-save>Save</button>
+		</form>
+	</div>
+</Layout>
+
+<script>
+	// "Choose one by one" enables a category's checkboxes; the other choices disable them (their
+	// boxes would be ignored anyway). Without this script the server still applies the same rules.
+	for (const category of document.querySelectorAll<HTMLFieldSetElement>('[data-seo-category]')) {
+		const sync = () => {
+			const custom = category.querySelector<HTMLInputElement>('[data-seo-mode="custom"]')?.checked ?? false;
+			const block = category.querySelector<HTMLInputElement>('[data-seo-mode="block"]')?.checked ?? false;
+			for (const box of category.querySelectorAll<HTMLInputElement>('[data-seo-bot]')) {
+				box.disabled = !custom;
+				if (!custom) box.checked = block;
+			}
+			const details = category.querySelector('details');
+			if (details && custom) details.open = true;
+		};
+		for (const radio of category.querySelectorAll('[data-seo-mode]')) radio.addEventListener('change', sync);
+	}
+</script>
+
+<style>
+	.seo-inner-sidebar {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		min-height: 100vh;
+		height: 100%;
+		padding: 1.5rem;
+	}
+	.seo-inner-sidebar__header {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+	.seo-inner-sidebar__title {
+		flex: 1;
+		margin: 0;
+		font-weight: 600;
+		font-size: 1.125rem;
+	}
+	.seo-inner-sidebar__links {
+		display: flex;
+		flex-direction: column;
+		gap: 0.375rem;
+	}
+	.seo-settings {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		max-width: 52rem;
+		/* Room below Save, so it can scroll clear of bottom-anchored overlays (Astro's dev toolbar). */
+		padding-bottom: 5rem;
+	}
+	.seo-settings form {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+	.seo-notice {
+		margin: 0;
+		padding: 0.5rem 0.75rem;
+		border-radius: 0.5rem;
+		border: 1px solid var(--success-base, hsl(142 60% 35%));
+	}
+	.seo-notice p,
+	.seo-notice ul {
+		margin: 0;
+	}
+	.seo-notice--error {
+		border-color: var(--danger-base, hsl(0 70% 50%));
+	}
+	.seo-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		padding: 1rem;
+		border: 1px solid var(--border, hsl(263 5% 68%));
+		border-radius: 0.5rem;
+		scroll-margin-top: 1rem;
+	}
+	.seo-group__title {
+		margin: 0;
+		font-size: 1.125rem;
+	}
+	.seo-help {
+		margin: 0;
+		line-height: 1.5;
+		color: var(--text-muted, inherit);
+	}
+	.seo-presets {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	.seo-presets__label {
+		font-weight: 600;
+	}
+	.seo-category {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0.75rem 1rem;
+		border: 1px solid var(--border, hsl(263 5% 68%));
+		border-radius: 0.5rem;
+	}
+	.seo-category legend {
+		padding: 0 0.375rem;
+		font-weight: 600;
+	}
+	.seo-count {
+		font-weight: 400;
+		color: var(--text-muted, inherit);
+	}
+	.seo-modes {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.25rem;
+	}
+	.seo-check {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		cursor: pointer;
+	}
+	.seo-bots summary,
+	.seo-preview summary {
+		cursor: pointer;
+	}
+	.seo-bots ul {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+		gap: 0.25rem 1rem;
+		margin: 0.5rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.seo-bots .seo-check {
+		display: grid;
+		grid-template-columns: auto auto minmax(0, 1fr) auto;
+		width: 100%;
+	}
+	.seo-bot__operator {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.seo-bot__name {
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: 0.8125rem;
+	}
+	.seo-bot__operator {
+		color: var(--text-muted, inherit);
+		font-size: 0.8125rem;
+	}
+	.seo-badge {
+		margin-inline-start: auto;
+		padding: 0 0.375rem;
+		font-size: 0.6875rem;
+		white-space: nowrap;
+		border: 1px solid var(--border, hsl(263 5% 68%));
+		border-radius: 999px;
+	}
+	.seo-badge--yes {
+		border-color: var(--success-base, hsl(142 60% 35%));
+	}
+	.seo-badge--no {
+		border-color: var(--danger-base, hsl(0 70% 50%));
+	}
+	.seo-field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.375rem;
+	}
+	.seo-field > span:first-child {
+		font-weight: 600;
+	}
+	.seo-field textarea {
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: 0.8125rem;
+		padding: 0.5rem;
+		border-radius: 0.375rem;
+		border: 1px solid var(--border, hsl(263 5% 68%));
+		background: var(--background-base, transparent);
+		color: inherit;
+	}
+	.seo-field textarea[aria-invalid='true'] {
+		border-color: var(--danger-base, hsl(0 70% 50%));
+	}
+	.seo-preview pre {
+		max-height: 24rem;
+		overflow: auto;
+		margin: 0.5rem 0;
+		padding: 0.75rem;
+		font-size: 0.8125rem;
+		white-space: pre-wrap;
+		border: 1px solid var(--border, hsl(263 5% 68%));
+		border-radius: 0.375rem;
+		background: var(--background-step-1, transparent);
+	}
+	.seo-settings a {
+		color: var(--primary-base, hsl(259 74% 45%));
+	}
+	.seo-button {
+		font: inherit;
+		padding: 0.375rem 0.75rem;
+		border-radius: 0.5rem;
+		border: 1px solid var(--border, hsl(263 5% 68%));
+		color: inherit;
+		background: var(--background-step-2, transparent);
+		cursor: pointer;
+	}
+	.seo-button--primary {
+		align-self: flex-start;
+		font-weight: 600;
+		padding: 0.5rem 1.25rem;
+		border-color: var(--primary-base, hsl(259 74% 45%));
+		color: var(--text-inverted, #fff);
+		background: var(--primary-base, hsl(259 74% 45%));
+	}
+	.seo-button:focus-visible,
+	.seo-settings input:focus-visible,
+	.seo-settings textarea:focus-visible,
+	.seo-settings summary:focus-visible {
+		outline: 2px solid var(--primary-base, hsl(259 74% 45%));
+		outline-offset: 2px;
+	}
+</style>
