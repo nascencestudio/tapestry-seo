@@ -17,8 +17,7 @@ project is the playground's; this repo has its own short one.
 ## Status
 
 - Stage 1 done (2026-10-11): robots.txt, sitemap, settings page. Not published yet.
-- Uses `@nascencestudio/tapestry` as `file:../tapestry` until Tapestry 0.3.0 (with `listPublicPages()`)
-  is on npm; CI can't install before that.
+- Develops against `@nascencestudio/tapestry` 0.3.0 from npm (`listPublicPages()`).
 - Stage 2 next: SEO button + modal in Tapestry's editor bar (detected like the media library), per-page
   settings saved immediately, `<Seo>` component.
 

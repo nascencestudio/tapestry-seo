@@ -28,4 +28,4 @@ included), a sitemap, later per-page SEO. [ADR 0001](decisions/0001-tapestry-seo
 
 ### Next
 - Stage 2: SEO button and modal in Tapestry's editor; per-page settings; `<Seo>` component.
-- Release after Tapestry 0.3.0 (switch the `file:` dev dependency to it).
+- Tapestry 0.3.0 is out (2026-10-11); the dev dependency uses it.

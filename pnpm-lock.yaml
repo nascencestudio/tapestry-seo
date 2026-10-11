@@ -173,8 +173,8 @@ importers:
         specifier: 2.5.14
         version: 2.5.14
       '@nascencestudio/tapestry':
-        specifier: file:../tapestry
-        version: file:../tapestry(astro@7.3.5(@types/node@22.20.4)(yaml@2.9.1))(studiocms@0.6.1(e36abd2cc2c39f5161d7cc5dbe835ee9))
+        specifier: 0.3.0
+        version: 0.3.0(astro@7.3.5(@types/node@22.20.4)(yaml@2.9.1))(studiocms@0.6.1(e36abd2cc2c39f5161d7cc5dbe835ee9))
       '@types/node':
         specifier: 22.20.4
         version: 22.20.4
@@ -924,8 +924,8 @@ packages:
       '@emnapi/core': ^1.7.1 || ^2.0.0-alpha.4
       '@emnapi/runtime': ^1.7.1 || ^2.0.0-alpha.4
 
-  '@nascencestudio/tapestry@file:../tapestry':
-    resolution: {directory: ../tapestry, type: directory}
+  '@nascencestudio/tapestry@0.3.0':
+    resolution: {integrity: sha512-hK/gst39ziaFKQQLSW93tslWv3DBn3TScZac0Wt0vgP2L24DQk4k1zTnM4fjqcZskFQfjXyst/GkLZBaKwp8MQ==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       '@nascencestudio/medialibrary': ^0.1.0 || ^0.2.0
@@ -3165,7 +3165,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.4
     optional: true
 
-  '@nascencestudio/tapestry@file:../tapestry(astro@7.3.5(@types/node@22.20.4)(yaml@2.9.1))(studiocms@0.6.1(e36abd2cc2c39f5161d7cc5dbe835ee9))':
+  '@nascencestudio/tapestry@0.3.0(astro@7.3.5(@types/node@22.20.4)(yaml@2.9.1))(studiocms@0.6.1(e36abd2cc2c39f5161d7cc5dbe835ee9))':
     dependencies:
       '@atlaskit/pragmatic-drag-and-drop': 4.0.0
       '@atlaskit/pragmatic-drag-and-drop-hitbox': 3.0.0
