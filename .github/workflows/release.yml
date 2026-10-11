@@ -1,9 +1,8 @@
 # Publishes @nascencestudio/tapestry-seo to npm with provenance (a signed attestation
 # linking the package to this workflow run and commit), when a GitHub release is published.
 #
-# The first release uses an `NPM_TOKEN` secret (below); after that, authentication is npm trusted
-# publishing (OIDC; no token): this repository, `release.yml`,
-# environment `npm`, allowed actions: stage only. Bump `version` in package.json and tag the
+# Authentication is npm trusted publishing only (OIDC; no token stored anywhere): this repository,
+# `release.yml`, environment `npm`, allowed actions: stage only. Bump `version` in package.json and tag the
 # release `v<version>`; then approve the staged version on npmjs.com (2FA).
 name: Release
 
@@ -49,7 +48,3 @@ jobs:
       # `pnpm stage approve`). The trusted publisher keeps "allow npm publish" off, so a stolen
       # workflow identity can only stage, never release.
       - run: pnpm stage publish --provenance --access public --no-git-checks
-        env:
-          # First release only (a trusted publisher needs an existing package). Remove this, the
-          # NPM_TOKEN secret and the npm token once the trusted publisher is set up.
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -29,3 +29,10 @@ included), a sitemap, later per-page SEO. [ADR 0001](decisions/0001-tapestry-seo
 ### Next
 - Stage 2: SEO button and modal in Tapestry's editor; per-page settings; `<Seo>` component.
 - Tapestry 0.3.0 is out (2026-10-11); the dev dependency uses it.
+
+## 2026-10-11: Trusted publishing only
+
+0.1.0 is on npm (published with a one-time token, since a trusted publisher needs an existing
+package). The trusted publisher is now set up and the package locked down (2FA, no bypass tokens),
+so the release workflow no longer passes `NPM_TOKEN`. Delete the `NPM_TOKEN` secret and revoke the
+token on npmjs.com if that isn't done yet.
