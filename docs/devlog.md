@@ -43,3 +43,28 @@ The playground's SEO suite, run with a 4× slower CPU (`E2E_CPU_THROTTLE=4`), cl
 one" right after a save, before the page's script had attached its change handlers: the radio was
 selected but the checkboxes stayed disabled. The script now also syncs each category once when it
 starts (it renders the same state the server does, so nothing changes otherwise). 0.1.1.
+
+## 2026-10-12: Stage 2: per-page SEO, `<Seo>`, site defaults (0.2.0)
+
+**Request:** the SEO button in Tapestry's editor for each page's SEO. Decisions (the user): the
+essential fields, site defaults on the settings page, search and link previews, editors may change
+SEO. [ADR 0002](decisions/0002-per-page-seo.md); Tapestry side: Tapestry ADR 0040 (0.4.0).
+
+### Done
+- Per-page settings (`page-seo.ts`), meta tags (`meta.ts`), site defaults (settings), sitemap leaves
+  out noindex pages and pages whose canonical points elsewhere.
+- `/_seo/page` (GET/POST, editors), one plugin-data row per page, `<Seo>` component, Site defaults
+  section on the settings page (media picker for the default image).
+- The dialog (`/editor`, Preact): fields with counters, search-result and link-card previews, media
+  picker, saves at once.
+- Tests: 62 unit tests (adversarial URLs and text); playground `seo-page` suite (9 steps, also at
+  4× CPU slowdown) and the dialog in the a11y audit (both themes).
+
+### Learned
+- A hidden page (or a 404) shouldn't name a canonical address of its own: `noindex` routes get no
+  self-canonical (a custom one still applies).
+- Tapestry's primary buttons use `--text-inverted` on `--primary-base`; plain white fails contrast on
+  StudioCMS's light purple in the dark theme.
+
+### Next
+- Release order: Tapestry 0.4.0 → switch this repo's dev dependency and peer range to it → 0.2.0.

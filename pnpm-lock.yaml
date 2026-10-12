@@ -168,6 +168,10 @@ overrides:
 importers:
 
   .:
+    dependencies:
+      preact:
+        specifier: 10.29.8
+        version: 10.29.8
     devDependencies:
       '@biomejs/biome':
         specifier: 2.5.14

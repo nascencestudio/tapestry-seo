@@ -4,6 +4,7 @@ import { buildSitemapXml, escapeXml, sitemapEntries } from '../src/sitemap.js';
 
 const origin = 'https://example.com';
 const page = (path: string, extra: Partial<Parameters<typeof sitemapEntries>[0][number]> = {}) => ({
+	id: path,
 	path,
 	package: 'tapestry/canvas',
 	updatedAt: '2026-10-02T10:20:30.000Z',
