@@ -1,6 +1,6 @@
 {
   "name": "@nascencestudio/tapestry-seo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "SEO for Tapestry sites on StudioCMS: robots.txt with an admin-controlled crawler list (AI bots included), sitemap.xml, and per-page SEO settings",
   "license": "MIT",
   "author": "Nascence Studio",

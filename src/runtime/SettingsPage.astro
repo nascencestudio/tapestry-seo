@@ -280,6 +280,8 @@ const { siteConfig, defaultLang: lang, security } = Astro.locals.StudioCMS;
 			if (details && custom) details.open = true;
 		};
 		for (const radio of category.querySelectorAll('[data-seo-mode]')) radio.addEventListener('change', sync);
+		// A choice made before this script ran (slow device, quick click) gets no change event here.
+		sync();
 	}
 </script>
 

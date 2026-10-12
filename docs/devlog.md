@@ -36,3 +36,10 @@ included), a sitemap, later per-page SEO. [ADR 0001](decisions/0001-tapestry-seo
 package). The trusted publisher is now set up and the package locked down (2FA, no bypass tokens),
 so the release workflow no longer passes `NPM_TOKEN`. Delete the `NPM_TOKEN` secret and revoke the
 token on npmjs.com if that isn't done yet.
+
+## 2026-10-12: Settings page: choices made before the script runs
+
+The playground's SEO suite, run with a 4× slower CPU (`E2E_CPU_THROTTLE=4`), clicked "Choose one by
+one" right after a save, before the page's script had attached its change handlers: the radio was
+selected but the checkboxes stayed disabled. The script now also syncs each category once when it
+starts (it renders the same state the server does, so nothing changes otherwise). 0.1.1.
