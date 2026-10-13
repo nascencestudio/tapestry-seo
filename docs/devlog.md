@@ -67,4 +67,4 @@ SEO. [ADR 0002](decisions/0002-per-page-seo.md); Tapestry side: Tapestry ADR 004
   StudioCMS's light purple in the dark theme.
 
 ### Next
-- Release order: Tapestry 0.4.0 → switch this repo's dev dependency and peer range to it → 0.2.0.
+- Tapestry 0.4.0 is on npm (2026-10-13); the dev dependency uses it. Release 0.2.0 next.

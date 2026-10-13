@@ -18,9 +18,8 @@ project is the playground's; this repo has its own short one.
 
 - Stage 1 done (2026-10-11): robots.txt, sitemap, settings page. 0.1.0 on npm; releases use trusted
   publishing only (staged, 2FA approval; no npm token).
-- Stage 2 done (2026-10-12, 0.2.0, not released yet): per-page SEO dialog, `<Seo>`, site defaults,
-  sitemap respects noindex/canonical. Needs Tapestry 0.4.0 (the SEO button): once that's on npm,
-  switch the dev dependency and the peer range to it, then release.
+- Stage 2 done (2026-10-12, 0.2.0): per-page SEO dialog, `<Seo>`, site defaults, sitemap respects
+  noindex/canonical. Develops against Tapestry 0.4.0 from npm (the SEO button; peer `^0.4.0`).
 
 ## Rules
 
