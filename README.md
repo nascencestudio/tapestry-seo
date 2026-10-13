@@ -1,8 +1,9 @@
 # @nascencestudio/tapestry-seo
 
 **SEO for [Tapestry](https://github.com/nascencestudio/tapestry) sites on [StudioCMS](https://studiocms.dev):**
-a robots.txt you control from the dashboard (including AI crawlers), and a sitemap of every
-published page.
+each page's search title, description and social image edited right in Tapestry's editor, the meta
+tags for them, a robots.txt you control from the dashboard (including AI crawlers), and a sitemap of
+every published page.
 
 - **Crawlers (robots.txt):** about 210 known crawlers in categories: search engines, AI training,
   AI search, AI assistants and agents, other AI, SEO tools, social link previews and web archives.
@@ -11,8 +12,13 @@ published page.
   out of crawlers' reach.
 - **Sitemap:** every page visitors can see (drafts and unpublished Tapestry pages never appear),
   with translations linked, listed in StudioCMS's sitemap index.
-- **Coming next:** per-page SEO settings in Tapestry's editor (search title, description, social
-  image, hide from search) and the meta tags for them.
+- **Per-page SEO:** an **SEO** button in Tapestry's editor opens the page's settings: search title,
+  description, social image (from the [media library](https://github.com/nascencestudio/medialibrary)
+  when installed), "hide from search engines" and a canonical address, with a search-result and a
+  link-preview preview. Saved at once (not part of the page's draft).
+- **Meta tags:** `<Seo>` writes the title, description, canonical link, robots, link-preview (Open
+  Graph, X/Twitter) and language alternates. Pages without their own settings use their StudioCMS
+  title and description in your title format, then the site defaults.
 
 The AI crawler list comes from [ai.robots.txt](https://github.com/ai-robots-txt/ai.robots.txt)
 (MIT). It's bundled with each release and reviewed before it ships; your site never downloads it.
@@ -22,7 +28,7 @@ The AI crawler list comes from [ai.robots.txt](https://github.com/ai-robots-txt/
 
 ## Requirements
 
-- Node ≥ 22.12, Astro 7, StudioCMS 0.6, Tapestry ≥ 0.3
+- Node ≥ 22.12, Astro 7, StudioCMS 0.6, Tapestry ≥ 0.4
 
 ## Install
 
@@ -51,12 +57,32 @@ export default defineStudioCMSConfig({
 explanation if StudioCMS's robots.txt is still on. Remove any `public/robots.txt` file too: a static
 file would win over the generated one.
 
-Set Astro's `site` option to your public URL, so the sitemap and robots.txt use it.
+Set Astro's `site` option to your public URL, so the sitemap, robots.txt and the meta tags use it.
+
+Then put `<Seo>` in your layout's `<head>`, in place of your own `<title>` and description:
+
+```astro
+---
+// src/layouts/Layout.astro (your page route passes getPage()'s result)
+import Seo from '@nascencestudio/tapestry-seo/Seo.astro';
+const { result } = Astro.props;
+---
+<head>
+  <meta charset="utf-8" />
+  <Seo page={result} />
+</head>
+```
+
+Routes without a StudioCMS page pass their own: `<Seo title="Page not found" noindex />`.
 
 ## Use
 
-Dashboard → **Plugins → Tapestry SEO** (admins). Changes apply at once; `/robots.txt` and the
-sitemap are cached for up to 5 minutes.
+- **A page's SEO:** open the page in Tapestry's editor and choose **SEO** in the purple bar (anyone
+  who can edit the page). Leave a field empty to use the page's own title or description. Social
+  images should be JPEG, PNG, WebP or GIF, about 1200 × 630 pixels (link previews can't show SVG).
+- **Site settings:** Dashboard → **Plugins → Tapestry SEO** (admins): site name and title format
+  (`{page} | {site}`), default description and social image, crawlers, sitemap. Changes apply at
+  once; `/robots.txt` and the sitemap are cached for up to 5 minutes.
 
 - `/robots.txt`
 - `/sitemap-index.xml` (StudioCMS's index, which lists this plugin's page sitemap)
@@ -72,9 +98,11 @@ What keeps that accountable:
 - **Decisions are written down** in [docs/decisions](docs/decisions/), and each working session is
   recorded in the [devlog](docs/devlog.md).
 - **Behaviour is tested.** Unit tests cover the crawler list (every name a safe robots.txt token),
-  the settings, robots.txt and the sitemap, with adversarial cases for everything that comes from
-  a form or the database. Browser tests drive the settings page and check the generated files;
-  they live in [tapestry-playground](https://github.com/nascencestudio/tapestry-playground).
+  the settings, per-page settings, the meta tags, robots.txt and the sitemap, with adversarial cases
+  for everything that comes from a form or the database (`javascript:` and `data:` addresses,
+  credentials in URLs, control characters, oversized values). Browser tests drive the settings page,
+  the SEO dialog and check what visitors and crawlers get, including an accessibility audit; they
+  live in [tapestry-playground](https://github.com/nascencestudio/tapestry-playground).
 - **No outside data at runtime.** The crawler list is reviewed and bundled; extra rules are checked
   line by line; the sitemap only writes escaped URLs on the site's own origin.
 - **Releases are traceable.** Versions are published from GitHub Actions with npm provenance, and

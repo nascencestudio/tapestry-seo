@@ -2,23 +2,28 @@
 import { StudioCMSRoutes } from 'studiocms:lib';
 import { Button } from 'studiocms:ui/components/button';
 import { Icon } from 'studiocms:ui/components/icon';
+import { enabled as mediaEnabled } from 'virtual:tapestry/media';
 /**
  * Plugins → Tapestry SEO in the StudioCMS dashboard (ADR 0001): which crawlers robots.txt blocks
- * (by category, or one by one), private paths, extra rules, a preview, and the sitemap options.
+ * (by category, or one by one), private paths, extra rules, a preview, the sitemap options, and the
+ * site defaults for `<Seo>` (site name, title format, description, social image; ADR 0002).
  * Served at the URL StudioCMS links plugins to (`/<dashboard>/plugins@<id>`, its missing slash
  * included) and at `/<dashboard>/plugins/<id>`. Admins only. The form posts to this page: valid
  * settings are saved and the page reloads; invalid extra rules come back with what was typed and
  * the line flagged, and nothing is saved.
  */
 /// <reference types="studiocms/v/types" />
+/// <reference path="../virtual.d.ts" />
 import { listPublicPages } from '@nascencestudio/tapestry/page';
 import PageHeader from 'studiocms/frontend/components/dashboard/PageHeader.astro';
 import SidebarLink from 'studiocms/frontend/components/dashboard/SidebarLink.astro';
 import Layout from 'studiocms/frontend/layouts/DashboardLayout.astro';
 import { BOTS, botsIn, CATEGORIES } from '../bots.js';
 import { AI_BOTS_SOURCE } from '../data/ai-bots.js';
+import { formatTitle } from '../meta.js';
 import { buildRobotsTxt, checkExtraRules, type RuleProblem } from '../robots.js';
 import { isBlocked, PRESETS, type SeoSettings, settingsFromForm } from '../settings.js';
+import { resolveImage } from './images.js';
 import { loadSeoSettings, saveSeoSettings } from './settings-store.js';
 import { robotsContext, siteOrigin } from './site.js';
 import { getSeoViewer } from './viewer.js';
@@ -84,6 +89,8 @@ const listDate = AI_BOTS_SOURCE.date
 	? new Date(AI_BOTS_SOURCE.date).toLocaleDateString('en', { dateStyle: 'medium' })
 	: null;
 const origin = siteOrigin(Astro);
+const defaultImage = await resolveImage([settings.defaults.image], origin);
+const titleExample = formatTitle('About us', settings.defaults);
 const { siteConfig, defaultLang: lang, security } = Astro.locals.StudioCMS;
 ---
 
@@ -107,6 +114,7 @@ const { siteConfig, defaultLang: lang, security } = Astro.locals.StudioCMS;
 			</Button>
 		</div>
 		<div class="seo-inner-sidebar__links">
+			<SidebarLink icon="heroicons:document-text" href={`${here}#defaults`}>Site defaults</SidebarLink>
 			<SidebarLink icon="heroicons:shield-check" href={`${here}#crawlers`}>Crawlers (robots.txt)</SidebarLink>
 			<SidebarLink icon="heroicons:map" href={`${here}#sitemap`}>Sitemap</SidebarLink>
 		</div>
@@ -118,7 +126,7 @@ const { siteConfig, defaultLang: lang, security } = Astro.locals.StudioCMS;
 
 	<div class="seo-settings" data-seo-settings>
 		{saved && (
-			<p class="seo-notice" role="status" data-seo-saved>Saved. robots.txt and the sitemap use these settings now.</p>
+			<p class="seo-notice" role="status" data-seo-saved>Saved. Pages, robots.txt and the sitemap use these settings now.</p>
 		)}
 		{problems.length > 0 && (
 			<div class="seo-notice seo-notice--error" role="alert" data-seo-error>
@@ -131,6 +139,69 @@ const { siteConfig, defaultLang: lang, security } = Astro.locals.StudioCMS;
 		{failed && <p class="seo-notice seo-notice--error" role="alert">Saving failed. Please try again.</p>}
 
 		<form method="post" action={here} data-seo-form>
+			<section class="seo-group" id="defaults" aria-labelledby="seo-defaults-title">
+				<h2 class="seo-group__title" id="seo-defaults-title">Site defaults</h2>
+				<p class="seo-help">
+					Used in every page's title and link previews, and when a page doesn't set its own SEO (Tapestry editor → SEO).
+				</p>
+				<label class="seo-field">
+					<span>Site name</span>
+					<input type="text" name="defaults.siteName" maxlength="100" value={settings.defaults.siteName} data-seo-site-name />
+				</label>
+				<label class="seo-field">
+					<span>Title format</span>
+					<input
+						type="text"
+						name="defaults.titleFormat"
+						maxlength="100"
+						value={settings.defaults.titleFormat}
+						aria-describedby="seo-title-format-help"
+						data-seo-title-format
+					/>
+					<span class="seo-help" id="seo-title-format-help">
+						<code>{'{page}'}</code> is the page title, <code>{'{site}'}</code> the site name. A page called "About us"
+						gets: <strong data-seo-title-example>{titleExample}</strong>. Pages with their own search title use it as written.
+					</span>
+				</label>
+				<label class="seo-field">
+					<span>Default description</span>
+					<textarea name="defaults.description" rows="2" maxlength="500" class="seo-plain" data-seo-default-description
+						>{settings.defaults.description}</textarea
+					>
+					<span class="seo-help">For pages without a description of their own.</span>
+				</label>
+				<div class="seo-field">
+					<span id="seo-default-image-label">Default social image</span>
+					{mediaEnabled ? (
+						<div class="seo-image" data-seo-default-image>
+							<input type="hidden" name="defaults.image" value={settings.defaults.image ?? ''} data-seo-image-value />
+							<img
+								class="seo-image__thumb"
+								src={defaultImage?.url ?? ''}
+								alt=""
+								hidden={!defaultImage}
+								data-seo-image-thumb
+							/>
+							<span class="seo-image__name" data-seo-image-label>{settings.defaults.image ? (defaultImage ? 'Chosen image' : 'Image not found') : 'None'}</span>
+							<button type="button" class="seo-button" aria-describedby="seo-default-image-label" data-seo-image-choose>
+								Choose…
+							</button>
+							<button type="button" class="seo-button" hidden={!settings.defaults.image} data-seo-image-remove>Remove</button>
+						</div>
+					) : (
+						<input
+							type="url"
+							name="defaults.image"
+							placeholder="https://"
+							value={settings.defaults.image ?? ''}
+							aria-labelledby="seo-default-image-label"
+							data-seo-default-image-url
+						/>
+					)}
+					<span class="seo-help">Shown when a page without its own image is shared. About 1200 × 630 pixels works everywhere.</span>
+				</div>
+			</section>
+
 			<section class="seo-group" id="crawlers" aria-labelledby="seo-crawlers-title">
 				<h2 class="seo-group__title" id="seo-crawlers-title">Crawlers (robots.txt)</h2>
 				<p class="seo-help">
@@ -283,6 +354,35 @@ const { siteConfig, defaultLang: lang, security } = Astro.locals.StudioCMS;
 		// A choice made before this script ran (slow device, quick click) gets no change event here.
 		sync();
 	}
+</script>
+
+<script>
+	// Default social image: the media library's picker (when installed) fills the hidden field.
+	import { loadPicker } from 'virtual:tapestry/media-client';
+
+	const box = document.querySelector<HTMLElement>('[data-seo-default-image]');
+	const value = box?.querySelector<HTMLInputElement>('[data-seo-image-value]');
+	const thumb = box?.querySelector<HTMLImageElement>('[data-seo-image-thumb]');
+	const label = box?.querySelector<HTMLElement>('[data-seo-image-label]');
+	const remove = box?.querySelector<HTMLButtonElement>('[data-seo-image-remove]');
+	box?.querySelector('[data-seo-image-choose]')?.addEventListener('click', async () => {
+		if (!loadPicker || !value) return;
+		const item = await (await loadPicker()).openMediaPicker({ accept: ['image'], title: 'Choose the default social image' });
+		if (!item) return;
+		value.value = item.id;
+		if (thumb) {
+			thumb.src = item.thumbnailUrl ?? item.url;
+			thumb.hidden = false;
+		}
+		if (label) label.textContent = item.name;
+		if (remove) remove.hidden = false;
+	});
+	remove?.addEventListener('click', () => {
+		if (value) value.value = '';
+		if (thumb) thumb.hidden = true;
+		if (label) label.textContent = 'None';
+		remove.hidden = true;
+	});
 </script>
 
 <style>
@@ -451,6 +551,33 @@ const { siteConfig, defaultLang: lang, security } = Astro.locals.StudioCMS;
 		border: 1px solid var(--border, hsl(263 5% 68%));
 		background: var(--background-base, transparent);
 		color: inherit;
+	}
+	.seo-field input[type='text'],
+	.seo-field input[type='url'],
+	.seo-field textarea.seo-plain {
+		font: inherit;
+		padding: 0.45rem 0.6rem;
+		border-radius: 0.375rem;
+		border: 1px solid var(--border, hsl(263 5% 68%));
+		background: var(--background-base, transparent);
+		color: inherit;
+	}
+	.seo-image {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		align-items: center;
+	}
+	.seo-image__thumb {
+		width: 6rem;
+		height: 3.15rem;
+		object-fit: cover;
+		border-radius: 0.25rem;
+		border: 1px solid var(--border, hsl(263 5% 68%));
+	}
+	.seo-image [hidden],
+	.seo-image__thumb[hidden] {
+		display: none;
 	}
 	.seo-field textarea[aria-invalid='true'] {
 		border-color: var(--danger-base, hsl(0 70% 50%));

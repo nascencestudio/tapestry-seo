@@ -7,8 +7,8 @@ session and keep it current.
 
 SEO for Tapestry sites on StudioCMS ([ADR 0001](docs/decisions/0001-tapestry-seo.md)): an
 admin-controlled robots.txt (crawler categories from ai.robots.txt plus our curated list), a page
-sitemap from Tapestry's `listPublicPages()`, and (stage 2, next) per-page SEO in Tapestry's editor
-with meta tags. Requires the Tapestry plugin. Nascence Studio, MIT.
+sitemap from Tapestry's `listPublicPages()`, and per-page SEO edited from Tapestry's editor (SEO
+button) with `<Seo>` meta tags and site defaults ([ADR 0002](docs/decisions/0002-per-page-seo.md)). Requires the Tapestry plugin. Nascence Studio, MIT.
 
 Sibling checkouts in `/Volumes/T7/www/`: `tapestry/`, `medialibrary/`, `tapestry-playground/` (dev
 site and browser tests: `e2e/seo.e2e.mjs`), and this repo. The devlog of record for the whole
@@ -18,9 +18,8 @@ project is the playground's; this repo has its own short one.
 
 - Stage 1 done (2026-10-11): robots.txt, sitemap, settings page. 0.1.0 on npm; releases use trusted
   publishing only (staged, 2FA approval; no npm token).
-- Develops against `@nascencestudio/tapestry` 0.3.0 from npm (`listPublicPages()`).
-- Stage 2 next: SEO button + modal in Tapestry's editor bar (detected like the media library), per-page
-  settings saved immediately, `<Seo>` component.
+- Stage 2 done (2026-10-12, 0.2.0): per-page SEO dialog, `<Seo>`, site defaults, sitemap respects
+  noindex/canonical. Develops against Tapestry 0.4.0 from npm (the SEO button; peer `^0.4.0`).
 
 ## Rules
 
@@ -44,8 +43,13 @@ src/
 ├── data/curated-bots.ts ← search engines, SEO tools, link previews, archives (hand-maintained)
 ├── settings.ts       ← settings model, presets, parse/form (pure)
 ├── robots.ts         ← buildRobotsTxt, checkExtraRules (pure)
-├── sitemap.ts        ← sitemapEntries, buildSitemapXml, escapeXml (pure)
-└── runtime/          ← robots-route, sitemap-route, SettingsPage.astro, settings-store, site, viewer
+├── sitemap.ts        ← sitemapEntries (+ page noindex/canonical), buildSitemapXml, escapeXml (pure)
+├── page-seo.ts       ← per-page settings: parse/validate, problems, oneLine (pure)
+├── meta.ts           ← buildMeta (all tags), formatTitle, previewImage (pure; the dialog uses it too)
+├── virtual.d.ts      ← Tapestry's virtual modules used here (config, media, media-client; Tapestry ADR 0040)
+├── editor/           ← `/editor` export: openSeoEditor(), SeoDialog.tsx (Preact), preview.ts (pure), styles.ts
+└── runtime/          ← robots-route, sitemap-route, page-endpoint (/_seo/page), page-seo-store, images,
+                         Seo.astro, SettingsPage.astro (+ site defaults), settings-store, site, viewer
 scripts/update-bots.mjs ← refresh AI list + license (categoryFor, operatorFor, CATEGORY_OVERRIDES)
 licenses/             ← third-party licenses shipped with the package
 .github/workflows/    ← ci, release (staged, provenance), update-bots (weekly PR)
@@ -75,3 +79,10 @@ licenses/             ← third-party licenses shipped with the package
 - The settings page is long: keep space below Save (Astro's dev toolbar covers the bottom edge in
   dev; e2e clicks wait until a target is uncovered).
 - `usePluginData()` can't save in StudioCMS 0.6.1: use `SDKCoreJs.dbService.db` (settings-store.ts).
+- The SEO dialog renders into `document.body`, outside the dashboard's page form, but keep the form
+  rules anyway: no `name` attributes, `type="button"`, Enter suppressed in one-line fields.
+- Its CSS is a string added as `<style>` on first open (`editor/styles.ts`): never import CSS from
+  browser code (it can land on every public page, Tapestry known issue #32).
+- `<Seo>` reads settings fresh per request (two indexed lookups + a media lookup when an image is
+  set). Media ids must resolve through `virtual:tapestry/media`; without the media library only
+  https:// image addresses work.

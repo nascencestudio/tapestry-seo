@@ -1,0 +1,63 @@
+---
+/**
+ * `<Seo>`: the page's title, description, canonical link, robots, link-preview (Open Graph, Twitter)
+ * and language-alternate tags (ADR 0002). Put it in `<head>` instead of your own `<title>`.
+ *
+ * - StudioCMS pages: pass getPage()'s result (`page={result}`). Its SEO settings (Tapestry editor →
+ *   SEO) win; otherwise its StudioCMS title and description in the site's format, then the site
+ *   defaults (Plugins → Tapestry SEO).
+ * - Other routes (404, custom pages): pass `title` (and `description`, `noindex`); they get the
+ *   site defaults for the rest.
+ *
+ * Server-rendered, no JavaScript. Values are written as attributes (escaped by Astro).
+ */
+/// <reference path="../virtual.d.ts" />
+import type { PageResult } from '@nascencestudio/tapestry/page';
+import { buildMeta } from '../meta.js';
+import { EMPTY_PAGE_SEO } from '../page-seo.js';
+import { resolveImage } from './images.js';
+import { loadPageSeo } from './page-seo-store.js';
+import { loadSeoSettings } from './settings-store.js';
+import { siteOrigin } from './site.js';
+
+interface Props {
+	/** getPage()'s result, for StudioCMS pages. */
+	page?: PageResult | null;
+	/** For routes without a StudioCMS page; also overrides the page's own title. */
+	title?: string;
+	description?: string;
+	/** Keep search engines from indexing this route (e.g. a 404 page). */
+	noindex?: boolean;
+}
+
+const { page: result, title, description, noindex } = Astro.props;
+const record = result?.page as { id?: unknown; title?: unknown; description?: unknown } | undefined;
+const origin = siteOrigin(Astro);
+const [settings, stored] = await Promise.all([
+	loadSeoSettings(),
+	record?.id != null ? loadPageSeo(String(record.id)) : Promise.resolve(null),
+]);
+const seo = { ...(stored ?? EMPTY_PAGE_SEO), ...(noindex ? { noindex: true } : {}) };
+const image = await resolveImage([seo.image, settings.defaults.image], origin);
+const meta = buildMeta({
+	page: {
+		title: title ?? String(record?.title ?? ''),
+		description: description ?? String(record?.description ?? ''),
+		path: Astro.url.pathname,
+		lang: result?.language?.code ?? null,
+		translations: (result?.translations ?? []).map((t) => ({ lang: t.lang, path: t.path })),
+	},
+	seo,
+	defaults: settings.defaults,
+	origin,
+	image,
+});
+---
+
+<title>{meta.title}</title>
+{meta.description && <meta name="description" content={meta.description} />}
+{meta.canonical && <link rel="canonical" href={meta.canonical} />}
+{meta.robots && <meta name="robots" content={meta.robots} />}
+{meta.openGraph.map(([property, content]) => <meta property={property} content={content} />)}
+{meta.twitter.map(([name, content]) => <meta name={name} content={content} />)}
+{meta.alternates.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}

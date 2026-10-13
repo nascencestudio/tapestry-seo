@@ -1,12 +1,14 @@
 /**
  * The page sitemap (ADR 0001): every page visitors can see (Tapestry's `listPublicPages()`),
- * minus page types the admin left out, with its last change and its translations as `hreflang`
- * alternates. Everything put into the XML is escaped, and only http(s) URLs are written. Pure.
+ * minus page types the admin left out and pages whose SEO settings say `noindex` or point their
+ * canonical elsewhere (ADR 0002), with its last change and its translations as `hreflang` alternates. Everything put into the XML is escaped, and only http(s) URLs are written. Pure.
  */
+import type { PageSeo } from './page-seo.js';
 import type { SeoSettings } from './settings.js';
 
 /** What the sitemap needs from a page (a subset of Tapestry's PublicPage). */
 export interface SitemapPage {
+	id: string;
 	path: string;
 	package: string;
 	updatedAt: string | null;
@@ -37,13 +39,21 @@ function absolute(origin: string, path: string): string | null {
 
 const LANG = /^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$/;
 
-export function sitemapEntries(pages: readonly SitemapPage[], origin: string, settings: SeoSettings): SitemapEntry[] {
+export function sitemapEntries(
+	pages: readonly SitemapPage[],
+	origin: string,
+	settings: SeoSettings,
+	pageSeo: ReadonlyMap<string, PageSeo> = new Map(),
+): SitemapEntry[] {
 	if (!settings.sitemap.enabled) return [];
 	const excluded = new Set(settings.sitemap.excludedTypes);
 	return pages.flatMap((page) => {
 		if (excluded.has(page.package)) return [];
 		const loc = absolute(origin, page.path);
 		if (!loc) return [];
+		const seo = pageSeo.get(page.id);
+		// A sitemap lists the addresses to index: not hidden pages, not pages that point elsewhere.
+		if (seo?.noindex || (seo?.canonical && seo.canonical !== loc)) return [];
 		const lastmod = page.updatedAt && !Number.isNaN(Date.parse(page.updatedAt)) ? page.updatedAt.slice(0, 10) : null;
 		const alternates = page.translations.flatMap((t) => {
 			const href = absolute(origin, t.path);

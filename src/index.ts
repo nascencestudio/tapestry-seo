@@ -3,7 +3,9 @@
  * - `/robots.txt` from an admin-controlled crawler list (AI crawlers from ai.robots.txt, search
  *   engines, SEO tools, link previews, archives), with private paths and extra rules;
  * - a page sitemap (every page visitors can see), listed in StudioCMS's `/sitemap-index.xml`;
- * - the settings page: Dashboard → Plugins → Tapestry SEO.
+ * - per-page settings (search title, description, social image, noindex, canonical) from an SEO
+ *   button in Tapestry's editor, and `<Seo>` (`@nascencestudio/tapestry-seo/Seo.astro`) for the tags;
+ * - the settings page: Dashboard → Plugins → Tapestry SEO (crawlers, sitemap, site defaults).
  * Requires Tapestry (`@nascencestudio/tapestry`), whose `listPublicPages()` the sitemap uses.
  *
  * Sites must turn off StudioCMS's own robots.txt (`features.robotsTXT: false`): it's written as a static
@@ -15,8 +17,12 @@ import { definePlugin } from 'studiocms/plugins';
 
 export type { Bot, CategoryId, Respects } from './bots.js';
 export { BOTS, CATEGORIES } from './bots.js';
+export type { Meta, MetaImage, MetaPage } from './meta.js';
+export { buildMeta, formatTitle } from './meta.js';
+export type { PageSeo } from './page-seo.js';
+export { parsePageSeo } from './page-seo.js';
 export { buildRobotsTxt, checkExtraRules } from './robots.js';
-export type { CategoryMode, SeoSettings } from './settings.js';
+export type { CategoryMode, SeoSettings, SiteDefaults } from './settings.js';
 export { DEFAULT_SETTINGS, PRESETS } from './settings.js';
 export { buildSitemapXml, sitemapEntries } from './sitemap.js';
 
@@ -60,6 +66,8 @@ export function tapestrySeo(): TapestrySeoPlugin {
 						'astro:config:setup': ({ injectRoute }) => {
 							const routes: Array<[string, string]> = [
 								['/robots.txt', './runtime/robots-route.js'],
+								// Per-page settings for the editor's SEO dialog (editors only).
+								['/_seo/page', './runtime/page-endpoint.js'],
 								// Plugins → Tapestry SEO. StudioCMS links plugins without a slash, and plugin dashboard
 								// pages make `[dashboard]` routes lose to its catch-all (Tapestry known issues #27, #28).
 								...['/dashboard', '/[dashboard]'].flatMap(
