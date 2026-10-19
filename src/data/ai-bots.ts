@@ -5,8 +5,8 @@ import type { Bot } from '../bots.js';
 
 export const AI_BOTS_SOURCE = {
 	"repository": "https://github.com/ai-robots-txt/ai.robots.txt",
-	"commit": "9ad8a47e23f7689ec3ea2423a47569d0bb91bdaf",
-	"date": "2026-10-03T03:02:07Z"
+	"commit": "6abe630599ada9181ec9e6f561655162a99a8c8f",
+	"date": "2026-10-18T02:15:30Z"
 };
 
 export const AI_BOTS: readonly Bot[] = [
@@ -675,11 +675,35 @@ export const AI_BOTS: readonly Bot[] = [
 		"source": "ai.robots.txt"
 	},
 	{
+		"name": "GrokAppAndroid",
+		"category": "ai-search",
+		"operator": "xAI",
+		"respects": "unknown",
+		"description": "Grok AI is an advanced AI assistant built by xAI that leverages real-time web and X data to produce context-aware, multimodal responses.",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "GrokBot",
+		"category": "ai-search",
+		"operator": "xAI",
+		"respects": "unknown",
+		"description": "Used to collect publicly available web content to support the training of Grok AI models.",
+		"source": "ai.robots.txt"
+	},
+	{
 		"name": "HenkBot",
 		"category": "ai-training",
 		"operator": "Unknown",
 		"respects": "unknown",
 		"description": "Henkbot crawls the web on behalf of Valyu, an AI search infrastructure provider that indexes content for use in AI-powered retrieval pipelines. More info can be found at https://knownagents.com/agents/henkbot",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "Hunyuan",
+		"category": "ai-training",
+		"operator": "Tencent",
+		"respects": "unknown",
+		"description": "Hunyuan is a training crawler operated by Tencent. Its job is to read public web pages and feed that content into a machine-learning pipeline that trains future versions of the model.",
 		"source": "ai.robots.txt"
 	},
 	{
@@ -939,6 +963,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"source": "ai.robots.txt"
 	},
 	{
+		"name": "MoonshotBot",
+		"category": "ai-training",
+		"operator": "Kimi",
+		"respects": "unknown",
+		"description": "MoonshotBot is a training crawler operated by Kimi. Its job is to read public web pages and feed that content into a machine-learning pipeline that trains future versions of the model.",
+		"source": "ai.robots.txt"
+	},
+	{
 		"name": "Mozilla-Tabstack",
 		"category": "ai-training",
 		"operator": "Mozilla",
@@ -960,6 +992,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"operator": "Naget Inc",
 		"respects": "unknown",
 		"description": "'Naget revolutionizes content discovery through an AI-powered ecosystem that transforms how we generate, organize, share, and discover valuable content.' (https://naget.com/) User-agent string links https://naget.ai/bot which yields 404.",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "nbot",
+		"category": "ai-search",
+		"operator": "NBot",
+		"respects": "unknown",
+		"description": "NBot uses advanced AI to scan news outlets, industry blogs, newsletters, and social media.",
 		"source": "ai.robots.txt"
 	},
 	{
@@ -1371,6 +1411,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"source": "ai.robots.txt"
 	},
 	{
+		"name": "xAI-Grok",
+		"category": "ai-training",
+		"operator": "xAI",
+		"respects": "unknown",
+		"description": "xAI-Grok is an xAI crawler token associated with Grok content collection. It is classified as training because it performs automated collection rather than a user-triggered fetch.",
+		"source": "ai.robots.txt"
+	},
+	{
 		"name": "YaK",
 		"category": "ai-search",
 		"operator": "Meltwater",
@@ -1392,6 +1440,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"operator": "Yandex",
 		"respects": "yes",
 		"description": "Retrieves data used for YandexGPT quick answers features.",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "YiBot",
+		"category": "ai-training",
+		"operator": "01.ai",
+		"respects": "unknown",
+		"description": "YiBot/1.0 is an advanced artificial intelligence platform designed to enhance interaction and engagement across various applications. Its architecture allows for seamless integration into websites and applications, providing users with a responsive and intuitive interface.",
 		"source": "ai.robots.txt"
 	},
 	{
