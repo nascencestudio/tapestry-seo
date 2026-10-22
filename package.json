@@ -73,6 +73,6 @@
   ],
   "packageManager": "pnpm@12.4.2",
   "dependencies": {
-    "preact": "10.29.8"
+    "preact": "^10.29.8"
   }
 }

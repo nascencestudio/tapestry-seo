@@ -170,7 +170,7 @@ importers:
   .:
     dependencies:
       preact:
-        specifier: 10.29.8
+        specifier: ^10.29.8
         version: 10.29.8
     devDependencies:
       '@biomejs/biome':
