@@ -5,8 +5,8 @@ import type { Bot } from '../bots.js';
 
 export const AI_BOTS_SOURCE = {
 	"repository": "https://github.com/ai-robots-txt/ai.robots.txt",
-	"commit": "9ad8a47e23f7689ec3ea2423a47569d0bb91bdaf",
-	"date": "2026-10-03T03:02:07Z"
+	"commit": "3ef52d90329b1c4071be4e0dc5e8f3864df6b69f",
+	"date": "2026-10-24T02:37:28Z"
 };
 
 export const AI_BOTS: readonly Bot[] = [
@@ -32,6 +32,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"operator": "The Agent Times",
 		"respects": "unknown",
 		"description": "Scrapes data for AI news aggregation and republishing.",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "AGI Agent",
+		"category": "ai-assistants",
+		"operator": "AGI",
+		"respects": "unknown",
+		"description": "AGI Agent is an AI assistant operated by AGI, Inc. that navigates websites to complete user-directed tasks, including online purchases and other actions. More info can be found at https://knownagents.com/agents/agi-agent",
 		"source": "ai.robots.txt"
 	},
 	{
@@ -267,6 +275,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"source": "ai.robots.txt"
 	},
 	{
+		"name": "CartAI Agentic Commerce",
+		"category": "ai-assistants",
+		"operator": "CartAI",
+		"respects": "unknown",
+		"description": "CartAI Agentic Commerce is a signed browser agent operated by CartAI that accesses online stores to support user-directed shopping and checkout workflows. More info can be found at https://knownagents.com/agents/cartai-agentic-commerce",
+		"source": "ai.robots.txt"
+	},
+	{
 		"name": "CCBot",
 		"category": "ai-training",
 		"operator": "Common Crawl Foundation",
@@ -347,6 +363,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"source": "ai.robots.txt"
 	},
 	{
+		"name": "CledaraBot",
+		"category": "ai-assistants",
+		"operator": "Cledara",
+		"respects": "unknown",
+		"description": "CledaraBot is an AI agent operated by Cledara that visits SaaS providers to complete customer-approved administrative tasks, including invoice collection and user managem… More info can be found at https://knownagents.com/agents/cledarabot",
+		"source": "ai.robots.txt"
+	},
+	{
 		"name": "Cloudflare-AutoRAG",
 		"category": "ai-search",
 		"operator": "Cloudflare",
@@ -376,6 +400,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"operator": "Unknown",
 		"respects": "unknown",
 		"description": "Code (GitHub Copilot) is an AI coding agent that can autonomously plan, build, and execute development tasks, functioning as a collaborative AI pair programmer. More info can be found at https://knownagents.com/agents/code",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "Codex",
+		"category": "ai-assistants",
+		"operator": "Unknown",
+		"respects": "unknown",
+		"description": "Codex is an AI coding agent by OpenAI that helps developers write, review, debug, and ship code. More info can be found at https://knownagents.com/agents/codex",
 		"source": "ai.robots.txt"
 	},
 	{
@@ -475,6 +507,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"source": "ai.robots.txt"
 	},
 	{
+		"name": "Dot",
+		"category": "ai-assistants",
+		"operator": "Unknown",
+		"respects": "unknown",
+		"description": "Dot is an OpenAI AI agent that uses a cloud browser to research websites and carry out ongoing tasks for users. More info can be found at https://knownagents.com/agents/dot",
+		"source": "ai.robots.txt"
+	},
+	{
 		"name": "DoubaoBot",
 		"category": "ai-assistants",
 		"operator": "ByteDance",
@@ -507,6 +547,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"source": "ai.robots.txt"
 	},
 	{
+		"name": "ElevenlabsBot",
+		"category": "ai-assistants",
+		"operator": "Unknown",
+		"respects": "unknown",
+		"description": "ElevenlabsBot fetches pages that customers add to or refresh in ElevenLabs agents' knowledge bases, making that content available in conversations. More info can be found at https://knownagents.com/agents/elevenlabsbot",
+		"source": "ai.robots.txt"
+	},
+	{
 		"name": "ERNIEBot",
 		"category": "ai-training",
 		"operator": "Baidu",
@@ -528,6 +576,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"operator": "Exa",
 		"respects": "unknown",
 		"description": "ExaSearchBot is a web crawler operated by Exa that discovers and indexes public web pages so their content can be found, retrieved, and cited through Exa. More info can be found at https://knownagents.com/agents/exasearchbot",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "ExaUser",
+		"category": "ai-assistants",
+		"operator": "Unknown",
+		"respects": "unknown",
+		"description": "ExaUser is Exa's on-demand fetcher that retrieves live website content when a user or an application built on the Exa API requests it. More info can be found at https://knownagents.com/agents/exauser",
 		"source": "ai.robots.txt"
 	},
 	{
@@ -675,11 +731,51 @@ export const AI_BOTS: readonly Bot[] = [
 		"source": "ai.robots.txt"
 	},
 	{
+		"name": "Grok Bot",
+		"category": "ai-assistants",
+		"operator": "Unknown",
+		"respects": "unknown",
+		"description": "Grok Bot is a personal AI agent created by xAI that runs on a persistent cloud computer with a browser, filesystem, and terminal. It completes multi-step tasks across app… More info can be found at https://knownagents.com/agents/grok-bot",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "GrokAppAndroid",
+		"category": "ai-search",
+		"operator": "xAI",
+		"respects": "unknown",
+		"description": "Grok AI is an advanced AI assistant built by xAI that leverages real-time web and X data to produce context-aware, multimodal responses.",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "GrokBot",
+		"category": "ai-search",
+		"operator": "xAI",
+		"respects": "unknown",
+		"description": "Used to collect publicly available web content to support the training of Grok AI models.",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "HarkBot",
+		"category": "ai-assistants",
+		"operator": "Unknown",
+		"respects": "unknown",
+		"description": "HarkBot visits web pages on behalf of signed-in Hark users as Hark carries out research, form-filling, and account actions. More info can be found at https://knownagents.com/agents/harkbot",
+		"source": "ai.robots.txt"
+	},
+	{
 		"name": "HenkBot",
 		"category": "ai-training",
 		"operator": "Unknown",
 		"respects": "unknown",
 		"description": "Henkbot crawls the web on behalf of Valyu, an AI search infrastructure provider that indexes content for use in AI-powered retrieval pipelines. More info can be found at https://knownagents.com/agents/henkbot",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "Hunyuan",
+		"category": "ai-training",
+		"operator": "Tencent",
+		"respects": "unknown",
+		"description": "Hunyuan is a training crawler operated by Tencent. Its job is to read public web pages and feed that content into a machine-learning pipeline that trains future versions of the model.",
 		"source": "ai.robots.txt"
 	},
 	{
@@ -736,6 +832,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"operator": "img2dataset",
 		"respects": "unknown",
 		"description": "Downloads large sets of images into datasets for LLM training or other purposes.",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "Instinct",
+		"category": "ai-assistants",
+		"operator": "Unknown",
+		"respects": "unknown",
+		"description": "Instinct is a personal AI agent that uses a phone and computer to complete everyday tasks such as ordering groceries, booking travel, arranging appointments, and communic… More info can be found at https://knownagents.com/agents/instinct",
 		"source": "ai.robots.txt"
 	},
 	{
@@ -939,11 +1043,27 @@ export const AI_BOTS: readonly Bot[] = [
 		"source": "ai.robots.txt"
 	},
 	{
+		"name": "MoonshotBot",
+		"category": "ai-training",
+		"operator": "Kimi",
+		"respects": "unknown",
+		"description": "MoonshotBot is a training crawler operated by Kimi. Its job is to read public web pages and feed that content into a machine-learning pipeline that trains future versions of the model.",
+		"source": "ai.robots.txt"
+	},
+	{
 		"name": "Mozilla-Tabstack",
 		"category": "ai-training",
 		"operator": "Mozilla",
 		"respects": "yes",
 		"description": "Mozilla-Tabstack is an AI agent operated by Mozilla that performs programmatic, AI-driven interactions with web content through Tabstack. More info can be found at https://knownagents.com/agents/mozilla-tabstack",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "Muse",
+		"category": "ai-assistants",
+		"operator": "Unknown",
+		"respects": "unknown",
+		"description": "Muse is a personal AI agent created by Meta that uses a web browser and connected apps to complete multi-step tasks such as filling out forms, booking travel, sending ema… More info can be found at https://knownagents.com/agents/muse",
 		"source": "ai.robots.txt"
 	},
 	{
@@ -960,6 +1080,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"operator": "Naget Inc",
 		"respects": "unknown",
 		"description": "'Naget revolutionizes content discovery through an AI-powered ecosystem that transforms how we generate, organize, share, and discover valuable content.' (https://naget.com/) User-agent string links https://naget.ai/bot which yields 404.",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "nbot",
+		"category": "ai-search",
+		"operator": "NBot",
+		"respects": "unknown",
+		"description": "NBot uses advanced AI to scan news outlets, industry blogs, newsletters, and social media.",
 		"source": "ai.robots.txt"
 	},
 	{
@@ -1075,6 +1203,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"source": "ai.robots.txt"
 	},
 	{
+		"name": "Payhawk Invoice Fetching Agent",
+		"category": "ai-assistants",
+		"operator": "Payhawk",
+		"respects": "unknown",
+		"description": "Payhawk Invoice Fetching Agent is a browser agent operated by Payhawk that retrieves invoices from supplier websites for users and attaches them to expense records. More info can be found at https://knownagents.com/agents/payhawk-invoice-fetching-agent",
+		"source": "ai.robots.txt"
+	},
+	{
 		"name": "Perplexity-User",
 		"category": "ai-assistants",
 		"operator": "Perplexity",
@@ -1103,7 +1239,7 @@ export const AI_BOTS: readonly Bot[] = [
 		"category": "ai-assistants",
 		"operator": "phind",
 		"respects": "unknown",
-		"description": "Phind is an AI-powered answer engine designed for developers, offering technical answers and code examples. It uses real-time web search and specialized AI models to prov… More info can be found at https://knownagents.com/agents/phindbot",
+		"description": "PhindBot retrieves web pages to support Phind's developer-focused search and answer engine, which uses current web information to answer technical questions. More info can be found at https://knownagents.com/agents/phindbot",
 		"source": "ai.robots.txt"
 	},
 	{
@@ -1371,6 +1507,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"source": "ai.robots.txt"
 	},
 	{
+		"name": "xAI-Grok",
+		"category": "ai-training",
+		"operator": "xAI",
+		"respects": "unknown",
+		"description": "xAI-Grok is an xAI crawler token associated with Grok content collection. It is classified as training because it performs automated collection rather than a user-triggered fetch.",
+		"source": "ai.robots.txt"
+	},
+	{
 		"name": "YaK",
 		"category": "ai-search",
 		"operator": "Meltwater",
@@ -1392,6 +1536,14 @@ export const AI_BOTS: readonly Bot[] = [
 		"operator": "Yandex",
 		"respects": "yes",
 		"description": "Retrieves data used for YandexGPT quick answers features.",
+		"source": "ai.robots.txt"
+	},
+	{
+		"name": "YiBot",
+		"category": "ai-training",
+		"operator": "01.ai",
+		"respects": "unknown",
+		"description": "YiBot/1.0 is an advanced artificial intelligence platform designed to enhance interaction and engagement across various applications. Its architecture allows for seamless integration into websites and applications, providing users with a responsive and intuitive interface.",
 		"source": "ai.robots.txt"
 	},
 	{
