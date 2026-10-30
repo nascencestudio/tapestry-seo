@@ -28,7 +28,7 @@ The AI crawler list comes from [ai.robots.txt](https://github.com/ai-robots-txt/
 
 ## Requirements
 
-- Node ≥ 22.12, Astro 7, StudioCMS 0.6 or 0.7, Tapestry ≥ 0.4
+- Node ≥ 22.12, Astro 7, StudioCMS 0.6 or 0.7, Tapestry 0.4 or 0.7
 
 ## Install
 

@@ -68,3 +68,8 @@ SEO. [ADR 0002](decisions/0002-per-page-seo.md); Tapestry side: Tapestry ADR 004
 
 ### Next
 - Tapestry 0.4.0 is on npm (2026-10-13); the dev dependency uses it. Release 0.2.0 next.
+
+## 2026-10-30: 0.2.1 prepared
+
+- Version 0.2.1: StudioCMS 0.7 alongside 0.6, Tapestry 0.4 or 0.7 (`^0.4.0 || ^0.7.0`: 0.5 and 0.6 are never
+  published), Preact ranges (Tapestry ADR 0044), current dev tools, audit refresh (nodemailer, undici).
