@@ -35,6 +35,13 @@ auditConfig:
     # braces <=3.0.3 (no patch, published 2026-09-18). Dev dependency (StudioCMS route
     # patterns); exploit needs attacker-controlled glob patterns. Re-check 2026-11-01.
     - GHSA-vfj7-8cjw-p6xm
+    # minimatch <11.0.1 (moderate, GHSA-g3hv-75wg-m249, published 2026-10-30): denial of service through glob
+    # pattern amplification. Via StudioCMS → @withstudiocms/component-registry → ts-morph → @ts-morph/common,
+    # which asks for ^10.0.1 and matches the project's own file globs at build time: no attacker-controlled
+    # patterns. The only fix is minimatch 11, a new major that adds @isaacs/nonrecursive-glob-match (first
+    # published 2026-10-26): not worth a brand-new package for this. Re-check 2026-11-15 (a 10.x fix, or
+    # ts-morph moving to 11).
+    - GHSA-g3hv-75wg-m249
 
 # Respect "engines" fields and pin exact versions when adding dependencies.
 engineStrict: true
@@ -45,6 +52,8 @@ verifyDepsBeforeRun: error
 
 # Forced versions of transitive dependencies. Reason and exit condition per entry.
 overrides:
-  # GHSA-68fv-2mgg-jv7q (high, event-loop DoS via crafted source maps; build-time only, via
-  # postcss/css-tree). 1.2.2 is the fix. Remove once vite/postcss/css-tree resolve >=1.2.2.
-  source-map-js: 1.2.2
+  # GHSA-4qx8-w7c3-pj3p, GHSA-9j65-hcg3-gc64, GHSA-9qmh-m7c6-f92p (high, CPU DoS in toml <=5.0.0; every
+  # 4.x is affected). Via StudioCMS → @withstudiocms/effect → @effect/cli, which parses config files with
+  # Toml.parse() and asks for ^4.3.0. 5.0.1 (2026-10-12) keeps parse() the same (checked: same exports, no
+  # dependencies, no install scripts, integrity verified). Remove when @effect/cli moves to toml >=5.0.1.
+  '@effect/cli>toml': 5.0.1

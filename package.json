@@ -1,6 +1,6 @@
 {
   "name": "@nascencestudio/tapestry-seo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "SEO for Tapestry sites on StudioCMS: robots.txt with an admin-controlled crawler list (AI bots included), sitemap.xml, and per-page SEO settings",
   "license": "MIT",
   "author": "Nascence Studio",
@@ -41,18 +41,18 @@
     "prepack": "pnpm build"
   },
   "peerDependencies": {
-    "@nascencestudio/tapestry": "^0.4.0",
+    "@nascencestudio/tapestry": "^0.4.0 || ^0.7.0",
     "astro": "^7.0.0",
-    "studiocms": "^0.6.0"
+    "studiocms": "^0.6.0 || ^0.7.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.14",
-    "@nascencestudio/tapestry": "0.4.0",
+    "@biomejs/biome": "2.5.15",
+    "@nascencestudio/tapestry": "0.7.0",
     "@types/node": "22.20.4",
-    "astro": "7.3.5",
-    "studiocms": "0.6.1",
+    "astro": "7.4.1",
+    "studiocms": "0.7.0",
     "typescript": "6.0.3",
-    "vitest": "5.0.3"
+    "vitest": "5.0.5"
   },
   "engines": {
     "node": ">=22.12.0"
@@ -73,6 +73,6 @@
   ],
   "packageManager": "pnpm@12.4.2",
   "dependencies": {
-    "preact": "10.29.8"
+    "preact": "^10.29.8"
   }
 }

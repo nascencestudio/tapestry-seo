@@ -78,7 +78,7 @@ licenses/             ← third-party licenses shipped with the package
   (search / link previews), though ai.robots.txt lists them.
 - The settings page is long: keep space below Save (Astro's dev toolbar covers the bottom edge in
   dev; e2e clicks wait until a target is uncovered).
-- `usePluginData()` can't save in StudioCMS 0.6.1: use `SDKCoreJs.dbService.db` (settings-store.ts).
+- `usePluginData()` can't save in StudioCMS 0.6.1 or 0.7.0: use `SDKCoreJs.dbService.db` (settings-store.ts).
 - The SEO dialog renders into `document.body`, outside the dashboard's page form, but keep the form
   rules anyway: no `name` attributes, `type="button"`, Enter suppressed in one-line fields.
 - Its CSS is a string added as `<style>` on first open (`editor/styles.ts`): never import CSS from
