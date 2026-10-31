@@ -177,8 +177,8 @@ importers:
         specifier: 2.5.15
         version: 2.5.15
       '@nascencestudio/tapestry':
-        specifier: 0.4.0
-        version: 0.4.0(astro@7.4.1(@types/node@22.20.4)(esbuild@0.28.2)(yaml@2.9.1))(studiocms@0.7.0(efe4f650652cd7256da36a8a8ee76436))
+        specifier: 0.7.0
+        version: 0.7.0(astro@7.4.1(@types/node@22.20.4)(esbuild@0.28.2)(yaml@2.9.1))(studiocms@0.7.0(efe4f650652cd7256da36a8a8ee76436))
       '@types/node':
         specifier: 22.20.4
         version: 22.20.4
@@ -928,13 +928,13 @@ packages:
       '@emnapi/core': ^1.7.1 || ^2.0.0-alpha.4
       '@emnapi/runtime': ^1.7.1 || ^2.0.0-alpha.4
 
-  '@nascencestudio/tapestry@0.4.0':
-    resolution: {integrity: sha512-2+WBipb10NIz9JpLfdFebQmio1hKY28rrRzsR44fcGdD+Z9a6clbtWmB1bJr44Porg5Mljx03zHMTZgF3gqN+g==}
+  '@nascencestudio/tapestry@0.7.0':
+    resolution: {integrity: sha512-wMSe90HPcn9REdUcxLyhUdUzMNklM508c0kSVsOa9+YDI0Uqo6MWWsgWIXzHewFeExQBFLyug6Z0tBbenO6rsg==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       '@nascencestudio/medialibrary': ^0.1.0 || ^0.2.0
       astro: ^7.0.0
-      studiocms: ^0.6.0
+      studiocms: ^0.6.0 || ^0.7.0
     peerDependenciesMeta:
       '@nascencestudio/medialibrary':
         optional: true
@@ -3080,7 +3080,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.4
     optional: true
 
-  '@nascencestudio/tapestry@0.4.0(astro@7.4.1(@types/node@22.20.4)(esbuild@0.28.2)(yaml@2.9.1))(studiocms@0.7.0(efe4f650652cd7256da36a8a8ee76436))':
+  '@nascencestudio/tapestry@0.7.0(astro@7.4.1(@types/node@22.20.4)(esbuild@0.28.2)(yaml@2.9.1))(studiocms@0.7.0(efe4f650652cd7256da36a8a8ee76436))':
     dependencies:
       '@atlaskit/pragmatic-drag-and-drop': 4.0.0
       '@atlaskit/pragmatic-drag-and-drop-hitbox': 3.0.0
