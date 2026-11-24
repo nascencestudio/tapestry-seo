@@ -74,7 +74,7 @@ SEO. [ADR 0002](decisions/0002-per-page-seo.md); Tapestry side: Tapestry ADR 004
 - Version 0.2.1: StudioCMS 0.7 alongside 0.6, Tapestry 0.4 or 0.7 (`^0.4.0 || ^0.7.0`: 0.5 and 0.6 are never
   published), Preact ranges (Tapestry ADR 0044), current dev tools, audit refresh (nodemailer, undici).
 
-## 2026-11-24: 0.2.2 and 0.2.3, one crawler-list pull request, operators from descriptions
+## 2026-11-24: 0.2.2 and 0.2.4, one crawler-list pull request, operators from descriptions
 
 - 0.2.2 (#18): dev dependencies (Tapestry 0.7.2, astro 7.4.13, biome 2.6.8, vitest 5.1.1), `.nvmrc`
   22.23.4, minimatch advisory GHSA-g3hv-75wg-m249 fixed (`@ts-morph/common` 0.29.1 → minimatch 11),
@@ -86,4 +86,5 @@ SEO. [ADR 0002](decisions/0002-per-page-seo.md); Tapestry side: Tapestry ADR 004
   company ("Codex is an AI coding agent by OpenAI"). `OPERATOR_OVERRIDES` in
   `scripts/bot-fields.mjs` (the script's pure mapping functions, now tested) names 38 of them; it is
   used only when upstream is unclear. 24 stay Unknown.
-- 0.2.3 (#19 and this release): ships the 38 filled-in operators.
+- 0.2.4 ships the 38 filled-in operators. 0.2.3 was never published: its release was created before
+  the version bump merged, and the `v0.2.3` tag can't be moved ("Protect release tags" ruleset).
