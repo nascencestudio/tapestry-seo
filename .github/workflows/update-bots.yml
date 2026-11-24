@@ -1,10 +1,12 @@
-# Weekly: refreshes the AI crawler list from ai.robots.txt (scripts/update-bots.mjs) and opens a
-# pull request when it changed, for review before the next release (ADR 0001). Sites never fetch
+# Weekly: refreshes the AI crawler list from ai.robots.txt (scripts/update-bots.mjs) and keeps one
+# pull request (branch `update-bots`) up to date with it, for review before the next release
+# (ADR 0001). Each run replaces the branch with a fresh refresh of main, so unmerged weeks don't
+# pile up; when main already has the latest list, the pull request is closed. Sites never fetch
 # the list themselves.
 #
 # Setup once: Settings → Actions → General → "Allow GitHub Actions to create and approve pull
-# requests". Pull requests opened with the workflow's own token don't start other workflows, so
-# CI won't run on them by itself: close and reopen the pull request to run it.
+# requests". Pushes with the workflow's own token don't start other workflows, so this one starts
+# CI on the branch itself (workflow_dispatch, the required check then shows on the pull request).
 name: Update crawler list
 
 on:
@@ -25,6 +27,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
+      actions: write # start CI on the branch
       contents: write
       pull-requests: write
     steps:
@@ -37,18 +40,28 @@ jobs:
       - run: pnpm update-bots
       - name: Check the new list
         run: pnpm test && pnpm typecheck
-      - name: Open a pull request if it changed
+      - name: Update the pull request
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if git diff --quiet; then echo "No changes."; exit 0; fi
-          branch="update-bots-$(date -u +%Y-%m-%d)"
-          if git ls-remote --exit-code --heads origin "$branch" >/dev/null; then echo "$branch exists."; exit 0; fi
+          branch=update-bots
+          today="$(date -u +%Y-%m-%d)"
+          open="$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')"
+          if git diff --quiet; then
+            echo "No changes."
+            if [ -n "$open" ]; then gh pr close "$open" --delete-branch --comment "main already has the latest crawler list ($today)."; fi
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -c "$branch"
-          git commit -am "Update the AI crawler list from ai.robots.txt"
-          git push origin "$branch"
-          gh pr create --base main --head "$branch" \
-            --title "Update the AI crawler list ($(date -u +%Y-%m-%d))" \
-            --body "Automated refresh of src/data/ai-bots.ts from ai.robots.txt. Review the added, removed and re-categorized crawlers before merging (tests and typecheck passed in the workflow). Close and reopen this pull request to run CI."
+          git commit -am "Update the AI crawler list from ai.robots.txt ($today)"
+          git push --force origin "$branch"
+          title="Update the AI crawler list ($today)"
+          body="Automated refresh of src/data/ai-bots.ts from ai.robots.txt, updated weekly on this branch until merged. Review the added, removed and re-categorized crawlers before merging (tests and typecheck passed in the workflow; CI runs on the branch)."
+          if [ -n "$open" ]; then
+            gh pr edit "$open" --title "$title" --body "$body"
+          else
+            gh pr create --base main --head "$branch" --title "$title" --body "$body"
+          fi
+          gh workflow run ci.yml --ref "$branch"

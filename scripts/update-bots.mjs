@@ -8,6 +8,7 @@
 // names that aren't safe robots.txt tokens or that are already in our curated list.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { categoryFor, operatorFor, plain, respectsFor } from './bot-fields.mjs';
 
 const REPO = 'ai-robots-txt/ai.robots.txt';
 const RAW = `https://raw.githubusercontent.com/${REPO}/main`;
@@ -26,62 +27,6 @@ const getText = async (url) => {
 	if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
 	return response.text();
 };
-
-/** `[Text](https://…)` → `Text`; whitespace collapsed. */
-const plain = (value) =>
-	String(value ?? '')
-		.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-		.replace(/\s+/g, ' ')
-		.trim();
-
-const UNCLEAR = /^unclear|^unknown|^n\/a$/i;
-
-/**
- * Upstream's "operator" is sometimes a sentence ("Google that retrieves web content…", "Ai2, a
- * non-profit…") or a URL. Keep the name: a URL becomes its site's name, a sentence is cut at the
- * first clause.
- */
-export function operatorFor(value) {
-	const text = plain(value);
-	if (!text || UNCLEAR.test(text)) return 'Unknown';
-	if (/^https?:\/\//i.test(text)) {
-		try {
-			const labels = new URL(text).hostname.replace(/^www\./, '').split('.');
-			const name = labels.length >= 2 ? labels[labels.length - 2] : labels[0];
-			return name ? name[0].toUpperCase() + name.slice(1) : 'Unknown';
-		} catch {
-			return 'Unknown';
-		}
-	}
-	const cut = text.split(/,\s|\s(?:that|to|which|used for)\s|\s\(|\.\s/)[0]?.trim() ?? '';
-	return cut ? cut.slice(0, 60) : 'Unknown';
-}
-
-/**
- * Reviewed corrections where the free-text mapping gets a well-known crawler wrong. Keep it short
- * and say why.
- */
-const CATEGORY_OVERRIDES = {
-	// Only controls whether Apple may use content for AI training (Applebot itself crawls).
-	'Applebot-Extended': 'ai-training',
-};
-
-export function categoryFor(fn, name = '') {
-	if (CATEGORY_OVERRIDES[name]) return CATEGORY_OVERRIDES[name];
-	const text = plain(fn).toLowerCase();
-	if (!text || UNCLEAR.test(text) || text.includes('undocumented')) return 'ai-other';
-	if (text.includes('search')) return 'ai-search';
-	if (/assistant|agent|coding|chat|browsing|on behalf|user[- ]initiated/.test(text)) return 'ai-assistants';
-	if (/train|scrap|data|llm|dataset|model|sold|collect/.test(text)) return 'ai-training';
-	return 'ai-other';
-}
-
-export function respectsFor(value) {
-	const text = plain(value).toLowerCase();
-	if (text.startsWith('yes')) return 'yes';
-	if (text.startsWith('no')) return 'no';
-	return 'unknown';
-}
 
 const curatedNames = new Set(
 	[...readFileSync(join(root, 'src/data/curated-bots.ts'), 'utf8').matchAll(/bot\('([^']+)'/g)].map((m) =>
@@ -109,7 +54,7 @@ for (const [name, info] of Object.entries(robots)) {
 	bots.push({
 		name,
 		category: categoryFor(info?.function, name),
-		operator: operatorFor(info?.operator),
+		operator: operatorFor(info?.operator, name),
 		respects: respectsFor(info?.respect),
 		description: plain(info?.description).slice(0, 300),
 		source: 'ai.robots.txt',

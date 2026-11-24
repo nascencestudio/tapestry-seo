@@ -1,13 +1,15 @@
 # Checks for every push and pull request: lint, audit, types, unit tests, build, and the
 # package contents. Actions are pinned to full commit SHAs (Dependabot keeps them current).
 # Browser tests run in nascencestudio/tapestry-playground (its site installs this package from
-# npm).
+# npm). workflow_dispatch: update-bots.yml starts it for its pull request, which the workflow's
+# own token can't do through pull_request events.
 name: CI
 
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
