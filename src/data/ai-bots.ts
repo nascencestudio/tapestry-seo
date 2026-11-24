@@ -13,7 +13,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "AddSearchBot",
 		"category": "ai-search",
-		"operator": "Unknown",
+		"operator": "AddSearch",
 		"respects": "unknown",
 		"description": "AddSearchBot is a web crawler that indexes website content for AddSearch's AI-powered site search solution, collecting data to provide fast and accurate search results. More info can be found at https://knownagents.com/agents/addsearchbot",
 		"source": "ai.robots.txt"
@@ -93,7 +93,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "amazon-QBusiness",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Amazon",
 		"respects": "unknown",
 		"description": "amazon-QBusiness is an Amazon Q Business web crawler that fetches and indexes web content for Amazon Q Business applications. More info can be found at https://knownagents.com/agents/amazon-qbusiness",
 		"source": "ai.robots.txt"
@@ -157,7 +157,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "ApifyBot",
 		"category": "ai-training",
-		"operator": "Unknown",
+		"operator": "Apify",
 		"respects": "unknown",
 		"description": "ApifyBot is a web scraping and data extraction crawler by Apify that collects website content for use in AI, LLMs, RAG, and automation workflows. More info can be found at https://knownagents.com/agents/apifybot",
 		"source": "ai.robots.txt"
@@ -165,7 +165,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "ApifyWebsiteContentCrawler",
 		"category": "ai-training",
-		"operator": "Unknown",
+		"operator": "Apify",
 		"respects": "unknown",
 		"description": "ApifyWebsiteContentCrawler is a web crawler by Apify that extracts and downloads full website content for use in AI, data analysis, and automation workflows. More info can be found at https://knownagents.com/agents/apifywebsitecontentcrawler",
 		"source": "ai.robots.txt"
@@ -229,7 +229,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "BixelBot",
 		"category": "ai-training",
-		"operator": "Unknown",
+		"operator": "Bixel",
 		"respects": "unknown",
 		"description": "BixelBot collects public company and market signals for Bixel's structured company-data platform, which supplies verified business information to AI agents and developers… More info can be found at https://knownagents.com/agents/bixelbot",
 		"source": "ai.robots.txt"
@@ -245,7 +245,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Brightbot",
 		"category": "ai-training",
-		"operator": "Unknown",
+		"operator": "Bright Data",
 		"respects": "unknown",
 		"description": "Brightbot is a web data collection crawler by Bright Data that extracts and structures public website content at scale, providing AI-ready data for model training, RAG pi… More info can be found at https://knownagents.com/agents/brightbot",
 		"source": "ai.robots.txt"
@@ -325,7 +325,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Claude-Agent",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Anthropic",
 		"respects": "unknown",
 		"description": "Claude-Agent is Anthropic's cloud browser agent for Claude Duet. It navigates websites and completes multi-step tasks on behalf of users. More info can be found at https://knownagents.com/agents/claude-agent",
 		"source": "ai.robots.txt"
@@ -333,7 +333,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Claude-Code",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Anthropic",
 		"respects": "unknown",
 		"description": "Claude Code is an AI coding agent by Anthropic that can build, debug, and ship code directly from the terminal, handling tasks like codebase onboarding, multi-file edits,… More info can be found at https://knownagents.com/agents/claude-code",
 		"source": "ai.robots.txt"
@@ -397,7 +397,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "CloudVertexBot",
 		"category": "ai-training",
-		"operator": "Unknown",
+		"operator": "Google",
 		"respects": "unknown",
 		"description": "CloudVertexBot is a Google-operated crawler available to site owners to request targeted crawls of their own sites for AI training purposes on the Vertex AI platform. More info can be found at https://knownagents.com/agents/cloudvertexbot",
 		"source": "ai.robots.txt"
@@ -405,7 +405,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Code",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "GitHub",
 		"respects": "unknown",
 		"description": "Code (GitHub Copilot) is an AI coding agent that can autonomously plan, build, and execute development tasks, functioning as a collaborative AI pair programmer. More info can be found at https://knownagents.com/agents/code",
 		"source": "ai.robots.txt"
@@ -413,7 +413,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Codex",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "OpenAI",
 		"respects": "unknown",
 		"description": "Codex is an AI coding agent by OpenAI that helps developers write, review, debug, and ship code. More info can be found at https://knownagents.com/agents/codex",
 		"source": "ai.robots.txt"
@@ -517,7 +517,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Dot",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "OpenAI",
 		"respects": "unknown",
 		"description": "Dot is an OpenAI AI agent that uses a cloud browser to research websites and carry out ongoing tasks for users. More info can be found at https://knownagents.com/agents/dot",
 		"source": "ai.robots.txt"
@@ -533,7 +533,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "DuckAssistBot",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "DuckDuckGo",
 		"respects": "yes",
 		"description": "DuckAssistBot is a web crawler that scans websites to collect content for DuckDuckGo's AI-assisted answers feature, which generates brief responses to search queries usin… More info can be found at https://knownagents.com/agents/duckassistbot",
 		"source": "ai.robots.txt"
@@ -581,7 +581,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "ExaBot",
 		"category": "ai-training",
-		"operator": "Unknown",
+		"operator": "Exa",
 		"respects": "unknown",
 		"description": "ExaBot is a web crawler that indexes web content to power Exa's AI search engine and semantic search APIs for AI applications. More info can be found at https://knownagents.com/agents/exabot",
 		"source": "ai.robots.txt"
@@ -597,7 +597,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "ExaUser",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Exa",
 		"respects": "unknown",
 		"description": "ExaUser is Exa's on-demand fetcher that retrieves live website content when a user or an application built on the Exa API requests it. More info can be found at https://knownagents.com/agents/exauser",
 		"source": "ai.robots.txt"
@@ -645,7 +645,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Gemini-Deep-Research",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Google",
 		"respects": "unknown",
 		"description": "Gemini-Deep-Research is the agent responsible for collecting and scanning resources used in Google Gemini's Deep Research feature, which acts as a personal research assis… More info can be found at https://knownagents.com/agents/gemini-deep-research",
 		"source": "ai.robots.txt"
@@ -661,7 +661,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Google-Agent",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Google",
 		"respects": "yes",
 		"description": "Google-Agent is used by agents hosted on Google infrastructure to navigate the web and perform actions upon user request. More info can be found at https://knownagents.com/agents/google-agent",
 		"source": "ai.robots.txt"
@@ -693,7 +693,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Google-Gemini-CLI",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Google",
 		"respects": "unknown",
 		"description": "Gemini CLI is an AI coding agent by Google that can query and edit large codebases, generate apps from images or PDFs, and automate complex workflows directly from the te… More info can be found at https://knownagents.com/agents/google-gemini-cli",
 		"source": "ai.robots.txt"
@@ -701,7 +701,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Google-GeminiNotebook",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Google",
 		"respects": "unknown",
 		"description": "Google-GeminiNotebook fetches individual URLs that users add as sources in Gemini Notebook so Google can analyze and summarize their content. More info can be found at https://knownagents.com/agents/google-gemininotebook",
 		"source": "ai.robots.txt"
@@ -709,7 +709,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Google-NotebookLM",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Google",
 		"respects": "unknown",
 		"description": "Google-NotebookLM is Google's former Gemini Notebook fetcher identifier that continues to retrieve source URLs users add to their notebooks. More info can be found at https://knownagents.com/agents/google-notebooklm",
 		"source": "ai.robots.txt"
@@ -765,7 +765,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Grok Bot",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "xAI",
 		"respects": "unknown",
 		"description": "Grok Bot is a personal AI agent created by xAI that runs on a persistent cloud computer with a browser, filesystem, and terminal. It completes multi-step tasks across app… More info can be found at https://knownagents.com/agents/grok-bot",
 		"source": "ai.robots.txt"
@@ -789,7 +789,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Haiku-SearchBot",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Haiku",
 		"respects": "unknown",
 		"description": "Haiku-SearchBot retrieves webpages in response to user requests through Haiku's legal AI services. More info can be found at https://knownagents.com/agents/haiku-searchbot",
 		"source": "ai.robots.txt"
@@ -797,7 +797,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "HarkBot",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Hark",
 		"respects": "unknown",
 		"description": "HarkBot visits web pages on behalf of signed-in Hark users as Hark carries out research, form-filling, and account actions. More info can be found at https://knownagents.com/agents/harkbot",
 		"source": "ai.robots.txt"
@@ -813,7 +813,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "HenkBot",
 		"category": "ai-training",
-		"operator": "Unknown",
+		"operator": "Valyu",
 		"respects": "unknown",
 		"description": "Henkbot crawls the web on behalf of Valyu, an AI search infrastructure provider that indexes content for use in AI-powered retrieval pipelines. More info can be found at https://knownagents.com/agents/henkbot",
 		"source": "ai.robots.txt"
@@ -909,7 +909,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Kangaroo Bot",
 		"category": "ai-training",
-		"operator": "Unknown",
+		"operator": "Kangaroo LLM",
 		"respects": "unknown",
 		"description": "Kangaroo Bot is used by the company Kangaroo LLM to download data to train AI models tailored to Australian language and culture. More info can be found at https://knownagents.com/agents/kangaroo-bot",
 		"source": "ai.robots.txt"
@@ -1005,7 +1005,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Liner-User",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Liner",
 		"respects": "unknown",
 		"description": "Liner-User fetches web content for Liner to answer user questions with cited information. More info can be found at https://knownagents.com/agents/liner-user",
 		"source": "ai.robots.txt"
@@ -1013,7 +1013,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "LinerBot",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Liner",
 		"respects": "unknown",
 		"description": "LinerBot is the web crawler used by Liner AI assistant to gather information from academic sources and websites to provide accurate answers with line-by-line source citat… More info can be found at https://knownagents.com/agents/linerbot",
 		"source": "ai.robots.txt"
@@ -1053,7 +1053,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "meta-externalfetcher",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Meta",
 		"respects": "no",
 		"description": "meta-externalfetcher is used by Meta to perform user-initiated fetches of individual links from AI assistant product functions. More info can be found at https://knownagents.com/agents/meta-externalfetcher",
 		"source": "ai.robots.txt"
@@ -1069,7 +1069,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "MiniMaxAgent",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "MiniMax",
 		"respects": "unknown",
 		"description": "MiniMaxAgent browses and uses online information to complete complex user-directed tasks in MiniMax Agent. More info can be found at https://knownagents.com/agents/minimax-agent",
 		"source": "ai.robots.txt"
@@ -1125,7 +1125,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Muse",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Meta",
 		"respects": "unknown",
 		"description": "Muse is a personal AI agent created by Meta that uses a web browser and connected apps to complete multi-step tasks such as filling out forms, booking travel, sending ema… More info can be found at https://knownagents.com/agents/muse",
 		"source": "ai.robots.txt"
@@ -1181,7 +1181,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "NovaAct",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Amazon",
 		"respects": "unknown",
 		"description": "NovaAct is Amazon's browser-using agent for navigating websites and completing multi-step tasks on behalf of users. More info can be found at https://knownagents.com/agents/novaact",
 		"source": "ai.robots.txt"
@@ -1237,7 +1237,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Operator",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "OpenAI",
 		"respects": "unknown",
 		"description": "Operator is an AI agent created by OpenAI that can use a web browser. It can intelligently navigate and interact with websites to complete multi-step tasks on behalf of a human user. More info can be found at https://knownagents.com/agents/operator",
 		"source": "ai.robots.txt"
@@ -1429,7 +1429,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Shap-User",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Parallel Web Systems",
 		"respects": "unknown",
 		"description": "Shap-User accesses web content on behalf of users of Parallel Web Systems products. It identifies user-initiated requests rather than automatic web crawling. More info can be found at https://knownagents.com/agents/shap-user",
 		"source": "ai.robots.txt"
@@ -1461,7 +1461,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "TavilyBot",
 		"category": "ai-training",
-		"operator": "Unknown",
+		"operator": "Tavily",
 		"respects": "unknown",
 		"description": "TavilyBot is a web crawler by Tavily that indexes and extracts content from billions of pages, providing real-time search, extraction, and research data to ground AI agen… More info can be found at https://knownagents.com/agents/tavilybot",
 		"source": "ai.robots.txt"
@@ -1469,7 +1469,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Terra Cotta",
 		"category": "ai-training",
-		"operator": "Unknown",
+		"operator": "Ceramic",
 		"respects": "unknown",
 		"description": "Terra Cotta is Ceramic's web crawler that indexes public content to power their web-scale search API for AI and LLMs. More info can be found at https://knownagents.com/agents/terra-cotta",
 		"source": "ai.robots.txt"
@@ -1517,7 +1517,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Trae",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "ByteDance",
 		"respects": "unknown",
 		"description": "Trae is an AI-powered coding agent developed by ByteDance that can understand codebases, fetch web content, and generate code. More info can be found at https://knownagents.com/agents/trae",
 		"source": "ai.robots.txt"
@@ -1533,7 +1533,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "UseAI",
 		"category": "ai-assistants",
-		"operator": "Unknown",
+		"operator": "Use AI",
 		"respects": "unknown",
 		"description": "UseAI is a web crawler associated with Use AI, a platform that provides an AI workspace where users can chat with AI models, research the web, and perform various tasks. … More info can be found at https://knownagents.com/agents/useai",
 		"source": "ai.robots.txt"
@@ -1557,7 +1557,7 @@ export const AI_BOTS: readonly Bot[] = [
 	{
 		"name": "Webzio-Extended",
 		"category": "ai-training",
-		"operator": "Unknown",
+		"operator": "Webz.io",
 		"respects": "unknown",
 		"description": "Webzio-Extended is a web crawler used by Webz.io to maintain a repository of web crawl data that it sells to other companies, including those using it to train AI models. More info can be found at https://knownagents.com/agents/webzio-extended",
 		"source": "ai.robots.txt"

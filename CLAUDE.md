@@ -50,9 +50,10 @@ src/
 ├── editor/           ← `/editor` export: openSeoEditor(), SeoDialog.tsx (Preact), preview.ts (pure), styles.ts
 └── runtime/          ← robots-route, sitemap-route, page-endpoint (/_seo/page), page-seo-store, images,
                          Seo.astro, SettingsPage.astro (+ site defaults), settings-store, site, viewer
-scripts/update-bots.mjs ← refresh AI list + license (categoryFor, operatorFor, CATEGORY_OVERRIDES)
+scripts/update-bots.mjs ← refresh AI list + license (fetch, merge spellings, write)
+scripts/bot-fields.mjs ← categoryFor, operatorFor, CATEGORY_/OPERATOR_OVERRIDES (pure, tested)
 licenses/             ← third-party licenses shipped with the package
-.github/workflows/    ← ci, release (staged, provenance), update-bots (weekly PR)
+.github/workflows/    ← ci, release (staged, provenance), update-bots (one PR, `update-bots` branch, refreshed weekly)
 ```
 
 ## Commands
@@ -73,7 +74,8 @@ licenses/             ← third-party licenses shipped with the package
   `sitemap-nascencestudio_tapestry_seo.xml`) and lists them in `/sitemap-index.xml`, which robots.txt
   points to.
 - ai.robots.txt's fields are free text: categories come from `categoryFor` (+ `CATEGORY_OVERRIDES`),
-  operators from `operatorFor` (cuts sentences, URLs → site name); one crawler can appear under two
+  operators from `operatorFor` (cuts sentences, URLs → site name; `OPERATOR_OVERRIDES` when upstream
+  says unclear but the description names the company); one crawler can appear under two
   spellings (merged: robots.txt is case-insensitive). Applebot and facebookexternalhit stay curated
   (search / link previews), though ai.robots.txt lists them.
 - The settings page is long: keep space below Save (Astro's dev toolbar covers the bottom edge in

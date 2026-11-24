@@ -73,3 +73,16 @@ SEO. [ADR 0002](decisions/0002-per-page-seo.md); Tapestry side: Tapestry ADR 004
 
 - Version 0.2.1: StudioCMS 0.7 alongside 0.6, Tapestry 0.4 or 0.7 (`^0.4.0 || ^0.7.0`: 0.5 and 0.6 are never
   published), Preact ranges (Tapestry ADR 0044), current dev tools, audit refresh (nodemailer, undici).
+
+## 2026-11-24: 0.2.2, one crawler-list pull request, operators from descriptions
+
+- 0.2.2 (#18): dev dependencies (Tapestry 0.7.2, astro 7.4.13, biome 2.6.8, vitest 5.1.1), `.nvmrc`
+  22.23.4, minimatch advisory GHSA-g3hv-75wg-m249 fixed (`@ts-morph/common` 0.29.1 → minimatch 11),
+  braces re-check 2026-12-24, crawler list from ai.robots.txt `eba7fddcfdac` (28 added).
+- Six weekly crawler pull requests had piled up, none with CI. `update-bots.yml` now keeps one
+  pull request on the `update-bots` branch (force-pushed each week, closed when main is current) and
+  starts CI on it (`workflow_dispatch`, added to `ci.yml`).
+- ai.robots.txt says "Unclear at this time." for 65 operators, though many descriptions name the
+  company ("Codex is an AI coding agent by OpenAI"). `OPERATOR_OVERRIDES` in
+  `scripts/bot-fields.mjs` (the script's pure mapping functions, now tested) names 38 of them; it is
+  used only when upstream is unclear. 24 stay Unknown.
