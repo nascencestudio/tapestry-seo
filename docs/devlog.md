@@ -88,3 +88,10 @@ SEO. [ADR 0002](decisions/0002-per-page-seo.md); Tapestry side: Tapestry ADR 004
   used only when upstream is unclear. 24 stay Unknown.
 - 0.2.4 ships the 38 filled-in operators. 0.2.3 was never published: its release was created before
   the version bump merged, and the `v0.2.3` tag can't be moved ("Protect release tags" ruleset).
+
+## 2026-11-26: 0.2.5, Preact 11
+
+- `preact` is `^10.29.8 || ^11.2.0` (Tapestry ADR 0048): sites on Preact 10 keep working, new installs get 11, and
+  the editor's packages still share one copy (Tapestry ADR 0044). The lockfile runs 11.2.0. No code changes were needed.
+- Verified: typecheck, unit tests and build on 11.2.0; the playground's 32 e2e suites and budget with Tapestry, the
+  media library, tapestry-seo and tapestry-menus as `file:` builds on one Preact 11.2.0.
